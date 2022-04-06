@@ -26,11 +26,16 @@ The main source of the data will be provided by the [Spotify API](https://develo
 - playlists
   - id
   - name
+  - description
   - user_id
 - songs
   - id
   - title
+  - artist
+- playlists_songs
+  - id
   - playlist_id
+  - song_id
 
 
 ## Potential API Issues:
