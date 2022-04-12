@@ -21,6 +21,23 @@ The main source of the data will be provided by the [Spotify API](https://develo
 
 <img src='./schema.png' alt='schema screenshot' height='350' width='800'>
 
+- users
+  - id: TEXT, PK (uuid)
+  - email: VARCHAR(50), unique
+  - password: TEXT (hashed)
+- playlists
+  - id: TEXT, PK (uuid)
+  - name: VARCHAR(25)
+  - description: VARCHAR(100)
+  - user_id: TEXT, FK
+- songs
+  - id: TEXT, PK (uuid)
+  - title: VARCHAR(50)
+  - artist: VARCHAR(50)
+- playlists_songs
+  - playlist_id: TEXT, FK
+  - song_id: TEXT, FK
+
 ## Potential API Issues:
 
 - Spotify has a rate limit that is calculated based on the number of calls to its API within a rolling 30 second window. A few endpoints also have custom rate limits that differ from the API-wide rate limit. Rate limit not specified.
