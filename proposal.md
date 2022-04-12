@@ -2,7 +2,7 @@
 
 ## Overview:
 
-The goal of this app is to allow music listeners to generate a Spotify playlist of songs based on the user’s indicated mood. 
+The goal of this app is to allow music listeners to generate a Spotify playlist of songs based on the user’s indicated mood.
 
 The user demographic will include:
 
@@ -19,56 +19,41 @@ The main source of the data will be provided by the [Spotify API](https://develo
 
 ## Database Schema:
 
-- users
-  - id
-  - username
-  - password
-- playlists
-  - id
-  - name
-  - description
-  - user_id
-- songs
-  - id
-  - title
-  - artist
-- playlists_songs
-  - id
-  - playlist_id
-  - song_id
-
+<img src='./schema.png' alt='schema screenshot' height='350' width='500'>
 
 ## Potential API Issues:
 
 - Spotify has a rate limit that is calculated based on the number of calls to its API within a rolling 30 second window. A few endpoints also have custom rate limits that differ from the API-wide rate limit. Rate limit not specified.
+  - Solution: cache data for a certain amount of time to minimize requests using Memcached.
 
 ## Sensitive Information:
 
-- Encrypted passwords will be stored for the user model.
+- Hashed passwords will be stored for the user model.
 
 ## Functionality:
 
 - Non-registered users:
-  - Can generate a song playlist based on their mood. 
-- Registered users:
-  - Can generate a song playlist based on their mood. 
-  - Can save / add the generated playlist to their own Spotify account after Spotify login.
+  - Ability to view auto-generated playlists based on example moods.
+  - Can generate a song playlist based on their mood.
+- Additional Features for Registered users:
+  - Can save the generated playlist to their own Spotify account after Spotify login.
   - Maybe: allow playlist songs to be played in the app.
 
 ## User Flow:
 
 I. Landing page
 
-- Link to register/login
+- Auto-generated playlists based on example moods
 - Slider (or something) to indicate mood / energy (sad, neutral, happy, etc.)
 - Textbox to add a name for the playlist
 - Button to generate the playlist
+- Link to register/login
 
 II. Playlist page / tab?
 
 - Displays playlist & songs within the playlist
-- Displays playlist title
-- Displays button to add the playlist to user Spotify account
+- Displays user created playlist title
+- Displays button to add the playlist to user Spotify account, if user is logged in
 
 ## Additional Considerations
 
