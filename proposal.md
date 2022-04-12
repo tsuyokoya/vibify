@@ -6,8 +6,14 @@ The goal of this app is to allow music listeners to generate a Spotify playlist 
 
 The user demographic will include:
 
-- music fans
+- Music fans
 - Spotify users (though not required)
+
+## Tools:
+
+- Front End: React?
+- Back End: Flask, Jinja?
+- Database: PostgreSQL
 
 ## Data Sources:
 
