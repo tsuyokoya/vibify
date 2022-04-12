@@ -19,7 +19,7 @@ The main source of the data will be provided by the [Spotify API](https://develo
 
 ## Database Schema:
 
-<img src='./schema.png' alt='schema screenshot' height='350' width='500'>
+<img src='./schema.png' alt='schema screenshot' height='350' width='800'>
 
 ## Potential API Issues:
 
