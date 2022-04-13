@@ -11,9 +11,7 @@ The user demographic will include:
 
 ## Tools:
 
-- Front End: React?
-- Back End: Flask, Jinja?
-- Database: PostgreSQL
+Flask | Jinja | PostgreSQL
 
 ## Data Sources:
 
