@@ -2,11 +2,9 @@
 
 from flask import Flask, render_template, redirect, request
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db
+from models import db, connect_db, User
 import os
 import re
-
-# from models import
 
 app = Flask(__name__)
 
