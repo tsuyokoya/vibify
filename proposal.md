@@ -11,7 +11,7 @@ The user demographic will include:
 
 ## Tools:
 
-Flask | Jinja | PostgreSQL
+Flask | Jinja | WTForms | PostgreSQL
 
 ## Data Sources:
 
