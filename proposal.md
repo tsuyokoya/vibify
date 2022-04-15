@@ -7,7 +7,7 @@ The goal of this app is to allow music listeners to generate a Spotify playlist 
 The user demographic will include:
 
 - Music fans
-- Spotify users (though not required)
+- Spotify users (though not required to have a Spotify account)
 
 ## Tools:
 
@@ -18,7 +18,7 @@ Flask | Jinja | WTForms | PostgreSQL
 The main source of the data will be provided by the [Spotify API](https://developer.spotify.com/documentation/web-api/). Some useful endpoints are:
 
 - ”Get User’s Top Items” / “Get Followed Artists” / “Get Featured Playlists” / “Get New Releases” - may be potential pools of songs from which playlists are created
-- “Get Tracks’ Audio Features” - each track has features that can be used to determine its perceived mood / energy (Danceability, Energy, Tempo, Valence)
+- “Get Tracks’ Audio Features” - each track has features that can be used to determine its perceived mood / energy (Danceability, Energy, Tempo, Valence). Also contains a "preview_url" that can be used to preview a 30 second snippet of a song.
 - “Create Playlist” - create the playlist based on songs determined to fit user mood
 
 ## Database Schema:
@@ -56,28 +56,38 @@ The main source of the data will be provided by the [Spotify API](https://develo
 - Non-registered users:
   - Ability to view auto-generated playlists based on example moods.
   - Can generate a song playlist based on their mood.
+  - Can play the song's 30 second preview on the page
 - Additional Features for Registered users:
   - Can save the generated playlist to their own Spotify account after Spotify login.
-  - Maybe: allow playlist songs to be played in the app.
+  - Maybe: allow playlist songs to be played in the app in full, rather than a preview.
 
 ## User Flow:
 
 I. Landing page
 
 - Auto-generated playlists based on example moods
-- Slider (or something) to indicate mood / energy (sad, neutral, happy, etc.)
+- Slider to indicate user mood / energy (sad, neutral, happy, etc.)
 - Textbox to add a name for the playlist
 - Button to generate the playlist
 - Link to register/login
 
-II. Playlist page / tab?
+II. Log In / Registration Form
 
-- Displays playlist & songs within the playlist
+- Log In form:
+  - Email and Password
+- Registration form:
+  - First Name, Email, and Password
+
+III. Playlist page
+
+- Displays playlist & songs in the playlist
 - Displays user created playlist title
 - Displays button to add the playlist to user Spotify account, if user is logged in
+- Displays button to generate a new playlist
 
 ## Additional Considerations
 
-1. Allow users to save generated playlists in the app
-2. Allow users to change username / password
-3. Playlist creation based on user mood and additional specifications (specific genre, artist, etc.)
+1. Allow users to see a list of previously generated playlists in the app
+2. Playlist creation based on user mood and additional specifications (specific genre, artist, etc.)
+3. Implement password reset
+4. Implement 2 factor authentication
