@@ -11,7 +11,7 @@ The user demographic will include:
 
 ## Tools:
 
-Flask | Jinja | WTForms | PostgreSQL
+Flask | Jinja | Flask-WTForms | PostgreSQL | SQLAlchemy | bcrypt
 
 ## Data Sources:
 
