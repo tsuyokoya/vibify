@@ -23,10 +23,11 @@ The main source of the data will be provided by the [Spotify API](https://develo
 
 ## Database Schema:
 
-<img src='./schema.png' alt='schema screenshot' height='350' width='800'>
+<img src='./vibify-schema.png' alt='schema screenshot' height='350' width='800'>
 
 - users
   - id: TEXT, PK (uuid)
+  - first_name: VARCHAR(25)
   - email: VARCHAR(50), unique
   - password: TEXT (hashed)
 - playlists
@@ -38,6 +39,9 @@ The main source of the data will be provided by the [Spotify API](https://develo
   - id: TEXT, PK (uuid)
   - title: VARCHAR(50)
   - artist: VARCHAR(50)
+  - album: VARCHAR(50)
+  - artwork: TEXT
+  - preview_url: TEXT
 - playlists_songs
   - playlist_id: TEXT, FK
   - song_id: TEXT, FK
