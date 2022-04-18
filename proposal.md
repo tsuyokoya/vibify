@@ -92,6 +92,7 @@ III. Playlist page
 ## Additional Considerations
 
 1. Allow users to see a list of previously generated playlists in the app
-2. Playlist creation based on user mood and additional specifications (specific genre, artist, etc.)
-3. Implement password reset
-4. Implement 2 factor authentication
+2. Show lyrics of the song that is playing
+3. Playlist creation based on user mood and additional specifications (specific genre, artist, etc.)
+4. Implement password reset
+5. Implement 2 factor authentication
