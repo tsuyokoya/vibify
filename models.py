@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -12,13 +14,99 @@ def connect_db(app):
 
 """Models for Vibify."""
 
-# Test table
+# - users
+#   - id: TEXT, PK (uuid)
+#   - first_name: VARCHAR(25)
+#   - email: VARCHAR(50), unique
+#   - password: TEXT (hashed)
+
+# User model
 class User(db.Model):
     """Creates user model"""
 
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    image_url = db.Column(db.Text)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    first_name = db.Column(db.String(25), nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    password = db.Column(db.Text, nullable=False)
+
+    @classmethod
+    def register(cls, first_name, email, password):
+        """Register user. Password is hashed. Adds user to system."""
+
+        hashed_pwd = bcrypt.generate_password_hash(password).decode("UTF-8")
+
+        user = User(
+            first_name=first_name,
+            email=email,
+            password=hashed_pwd,
+        )
+
+        db.session.add(user)
+        return user
+
+
+# - playlists
+#   - id: TEXT, PK (uuid)
+#   - name: VARCHAR(25)
+#   - description: VARCHAR(100)
+#   - user_id: TEXT, FK
+
+# Playlist model
+class Playlist(db.Model):
+    """Creates playlist model"""
+
+    __tablename__ = "playlists"
+
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = db.Column(db.String(25), nullable=False)
+    description = db.Column(db.String(100))
+    user_id = db.Column(
+        UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="cascade")
+    )
+
+
+# - songs
+#   - id: TEXT, PK (uuid)
+#   - title: VARCHAR(50)
+#   - artist: VARCHAR(50)
+#   - album: VARCHAR(50)
+#   - artwork: TEXT
+#   - preview_url: TEXT
+
+# Song model
+class Song(db.Model):
+    """Creates song model"""
+
+    __tablename__ = "songs"
+
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = db.Column(db.String(50), nullable=False)
+    artist = db.Column(db.String(50), nullable=False)
+    album = db.Column(db.String(50))
+    artwork = db.Column(db.Text)
+    preview_url = db.Column(db.Text)
+
+
+# - playlists_songs
+#   - playlist_id: TEXT, FK
+#   - song_id: TEXT, FK
+
+# Playlist_Song model
+class Playlist_Song(db.Model):
+    """Connection of a playlist <-> song."""
+
+    __tablename__ = "playlists_songs"
+
+    playlist_id = db.Column(
+        UUID(as_uuid=True),
+        db.ForeignKey("playlists.id", ondelete="cascade"),
+        primary_key=True,
+    )
+
+    song_id = db.Column(
+        UUID(as_uuid=True),
+        db.ForeignKey("songs.id", ondelete="cascade"),
+        primary_key=True,
+    )
