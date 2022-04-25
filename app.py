@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, redirect, request
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_migrate import Migrate
 from models import db, connect_db, User
 import os
 import re
@@ -27,6 +28,7 @@ app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 debug = DebugToolbarExtension(app)
 
 connect_db(app)
+migrate = Migrate(app, db)
 db.create_all()
 
 
