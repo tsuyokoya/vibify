@@ -3,7 +3,7 @@
 from flask import Flask, render_template, redirect, request, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
-from models import db, connect_db, User
+from models import db, connect_db, User, Playlist, Song, Playlist_Song
 import os
 import re
 
@@ -24,9 +24,8 @@ else:
 
 debug = DebugToolbarExtension(app)
 
-connect_db(app)
 migrate = Migrate(app, db)
-db.create_all()
+connect_db(app)
 
 ##############################################################################
 # User signup/login/logout
