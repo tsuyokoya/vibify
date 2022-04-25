@@ -46,6 +46,11 @@ class User(db.Model):
         db.session.add(user)
         return user
 
+    playlists = db.relationship(
+        "Playlist",
+        backref="user",
+    )
+
 
 # - playlists
 #   - id: TEXT, PK (uuid)
@@ -64,6 +69,12 @@ class Playlist(db.Model):
     description = db.Column(db.String(100))
     user_id = db.Column(
         UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="cascade")
+    )
+
+    songs = db.relationship(
+        "Song",
+        secondary="playlists_songs",
+        backref="playlists",
     )
 
 
