@@ -1,10 +1,14 @@
-{% extends 'base.html' %} {% block title %}Vibify Login{% endblock %} {% block
-content %}
-<!-- Login -->
+{% extends 'base.html' %} {% block title %}Vibify Register{% endblock %} {%
+block content %}
+<!-- Registration -->
 <div class="flex justify-evenly bg-darkBlue text-center py-14">
-  <!-- Login form -->
+  <!-- Registration form -->
   <form action="#">
-    <h2>Log in to your account</h2>
+    <h2>New to Vibify? Sign Up</h2>
+    <div>
+      <label for="login-name">First Name</label>
+      <input type="text" id="login-name" name="login-name" class="w-1/4 mb-6" />
+    </div>
     <div>
       <label for="login-email">Email</label>
       <input
@@ -27,7 +31,7 @@ content %}
       <button
         class="bg-lightGreen hover:opacity-70 rounded-md p-3 w-1/6 transition hover:scale-110 delay-100"
       >
-        Log in
+        Create an Account
       </button>
     </div>
   </form>
