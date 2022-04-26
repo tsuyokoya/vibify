@@ -36,7 +36,12 @@
           <a
             href="{{url_for('show_login_page')}}"
             class="text-white hover:text-darkBlue p-3"
-            >Log In / Register</a
+            >Log In</a
+          >
+          <a
+            href="{{url_for('show_register_page')}}"
+            class="text-white hover:text-darkBlue p-3"
+            >Register</a
           >
         </div>
       </div>
@@ -71,28 +76,13 @@
             <p class="text-black">Vibe: 😐</p>
           </div>
           <form action="#">
+            {{form.hidden_tag()}} {% for field in form if
+            field.widget.input_type != 'hidden'%}
             <div>
-              <label for="playlist-title">Playlist Title</label>
-              <input
-                type="text"
-                id="playlist-title"
-                name="playlist-title"
-                class="w-1/4 mb-6"
-                placeholder="Enter your playlist title"
-              />
+              {{field.label}} {{field (class="w-1/2 mb-6")}} {% for error in
+              field.errors %} {{error}} {% endfor %}
             </div>
-            <div>
-              <label class="block" for="playlist-vibe">Neutral</label>
-              <input
-                type="range"
-                min="0"
-                max="10"
-                value="5"
-                id="playlist-vibe"
-                name="playlist-vibe"
-                class="w-1/2 mb-6"
-              />
-            </div>
+            {% endfor %}
             <div>
               <button
                 class="bg-lightGreen hover:opacity-70 rounded-md p-3 w-1/6 transition hover:scale-110 delay-100"
