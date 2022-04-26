@@ -11,18 +11,19 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="{{url_for('static',filename='main.css')}}" />
+    <!-- <link rel="stylesheet" href="../static/main.css" /> -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
     />
-    <title>Vibify Home</title>
+    <title>{% block title %}Vibify Home{% endblock %}</title>
   </head>
   <body>
     <!-- Navbar -->
     <nav class="relative bg-black sticky top-0 text-2xl z-50">
       <!-- Flex container -->
       <div class="flex justify-between">
-        <div class="font-heading text-white p-3">Vibify</div>
+        <div class="font-heading text-lightGreen p-3">Vibify</div>
         <!-- Menu items -->
         <div class="hidden md:flex space-x-2">
           <a href="#description" class="text-white hover:text-darkBlue p-3"
@@ -34,5 +35,183 @@
         </div>
       </div>
     </nav>
+    <!-- Main content -->
+    <main class="text-white">
+      {% block content %}
+      <!-- Body container????? -->
+      <!-- Generate playlist -->
+      <div class="bg-darkBlue text-center py-14">
+        <!-- Heading -->
+        <header>
+          <h1 class="font-heading text-9xl text-lightGreen pb-1">Vibify</h1>
+          <h2 class="text-4xl">
+            Generate Spotify playlists based on your vibe.
+          </h2>
+        </header>
+        <!-- Create playlist -->
+        <div class="flex-col relative">
+          <!-- Cassette image -->
+          <div>
+            <img
+              src="../static/images/cassette.png"
+              alt="cassette tape"
+              class="mx-auto"
+            />
+          </div>
+          <div class="absolute font-heading inset-x-1/4 top-36 text-3xl">
+            <p class="text-black">Playlist Title</p>
+          </div>
+          <div class="absolute font-heading inset-x-1/4 top-44 text-xl">
+            <p class="text-black">Vibe: 😐</p>
+          </div>
+          <form action="#">
+            <div>
+              <label for="playlist-title">Playlist Title</label>
+              <input
+                type="text"
+                id="playlist-title"
+                name="playlist-title"
+                class="w-1/4 mb-6"
+                placeholder="Enter your playlist title"
+              />
+            </div>
+            <div>
+              <label class="block" for="playlist-vibe">Neutral</label>
+              <input
+                type="range"
+                min="0"
+                max="10"
+                value="5"
+                id="playlist-vibe"
+                name="playlist-vibe"
+                class="w-1/2 mb-6"
+              />
+            </div>
+            <div>
+              <button
+                class="bg-lightGreen hover:opacity-70 rounded-md p-3 w-1/6 transition hover:scale-110 delay-100"
+              >
+                Generate
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- Preset playlists -->
+        <div>
+          <h2 class="text-4xl py-7">
+            Need inspiration? Create a playlist based on a vibe below!
+          </h2>
+          <!-- Playlists -->
+          <div class="flex justify-evenly">
+            <a
+              href="#"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl"
+              >Sad</a
+            >
+            <a
+              href="#"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl"
+              >Neutral</a
+            >
+            <a
+              href="#"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl"
+              >Happy</a
+            >
+          </div>
+        </div>
+      </div>
+      <!-- Description -->
+      <div id="description" class="text-center bg-deepPurple py-14">
+        <h2 class="text-4xl pb-7">How it Works</h2>
+        <!-- Flex container -->
+        <div class="flex justify-evenly text-2xl">
+          <!-- Description 1 -->
+          <div class="flex-col border-solid border-4 rounded-md p-6 w-1/5">
+            <h3>
+              <i class="fa-solid fa-headphones-simple"></i> 1. Create a playlist
+            </h3>
+            <br />
+            <p>
+              What’s the vibe? What kind of songs do you want to listen to? Type
+              in your playlist’s name, set your vibe, and hit generate!
+            </p>
+          </div>
+          <!-- Description 2 -->
+          <div class="flex-col border-solid border-4 rounded-md p-6 w-1/5">
+            <h3><i class="fa-solid fa-lightbulb"></i> 2. Want to explore?</h3>
+            <br />
+            <p>
+              Click on a playlist above that is based on a preset vibe. No need
+              to name the playlist or set the vibe.
+            </p>
+          </div>
+          <!-- Description 3 -->
+          <div class="flex-col border-solid border-4 rounded-md p-6 w-1/5">
+            <h3><i class="fa-brands fa-spotify"></i> 3. Vibing with Spotify</h3>
+            <br />
+            <p>
+              Using the Spotify API, songs are sifted through and only selected
+              for your playlist if they match the indicated vibe.
+            </p>
+          </div>
+          <!-- Description 4 -->
+          <div class="flex-col border-solid border-4 rounded-md p-6 w-1/5">
+            <h3><i class="fa-solid fa-circle-check"></i> 4. All Done</h3>
+            <br />
+            <p>
+              There you go - the carefully curated songs are bundled into your
+              very own personalized playlist!
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Sign up information -->
+      <div class="text-center bg-white py-14 text-black">
+        <!-- Flex container -->
+        <div class="flex items-center">
+          <div class="w-1/2 p-3">
+            <p class="text-4xl text-deepPurple">
+              NO ACCOUNT? <br />
+              NO PROBLEM.
+            </p>
+          </div>
+          <div class="w-1/3 p-3 text-2xl">
+            <p>
+              An account is <u>not</u> required for generating a playlist.
+              <br /><br />Why even sign up, you ask? Registered users will be
+              able to connect to their Spotify accounts and save their playlists
+              directly to Spotify.
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endblock %}
+      <!-- Footer -->
+      <footer class="flex justify-between bg-black text-2xl">
+        <div class="p-3">
+          <a
+            href="https://www.flaticon.com/free-icons/cassette"
+            title="cassette icons"
+            class="hover:text-darkBlue text-sm"
+            >Cassette icons created by Freepik - Flaticon</a
+          >
+        </div>
+        <div class="p-3 space-x-2">
+          <a
+            href="https://www.linkedin.com/in/tsuyoshi-koyama-2018/"
+            class="hover:text-darkBlue"
+            target="blank"
+            >Contact</a
+          >
+          <a
+            href="https://github.com/tsuyokoya"
+            class="hover:text-darkBlue"
+            target="blank"
+            >Github</a
+          >
+        </div>
+      </footer>
+    </main>
   </body>
 </html>
