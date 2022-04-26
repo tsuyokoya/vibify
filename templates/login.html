@@ -1,0 +1,68 @@
+{% extends 'base.html' %} {% block title %}Vibify Login{% endblock %} {% block
+content %}
+<!-- Login or Registration -->
+<div class="flex justify-evenly bg-darkBlue text-center py-14">
+  <!-- Login form -->
+  <form action="#">
+    <h2>Log in to your account</h2>
+    <div>
+      <label for="login-email">Email</label>
+      <input
+        type="text"
+        id="login-email"
+        name="login-email"
+        class="w-1/4 mb-6"
+      />
+    </div>
+    <div>
+      <label for="login-password">Password</label>
+      <input
+        type="text"
+        id="login-password"
+        name="login-password"
+        class="w-1/4 mb-6"
+      />
+    </div>
+    <div>
+      <button
+        class="bg-lightGreen hover:opacity-70 rounded-md p-3 w-1/6 transition hover:scale-110 delay-100"
+      >
+        Log in
+      </button>
+    </div>
+  </form>
+  <!-- Registration form -->
+  <form action="#">
+    <h2>New to Vibify? Sign Up</h2>
+    <div>
+      <label for="login-name">First Name</label>
+      <input type="text" id="login-name" name="login-name" class="w-1/4 mb-6" />
+    </div>
+    <div>
+      <label for="login-email">Email</label>
+      <input
+        type="text"
+        id="login-email"
+        name="login-email"
+        class="w-1/4 mb-6"
+      />
+    </div>
+    <div>
+      <label for="login-password">Password</label>
+      <input
+        type="text"
+        id="login-password"
+        name="login-password"
+        class="w-1/4 mb-6"
+      />
+    </div>
+    <div>
+      <button
+        class="bg-lightGreen hover:opacity-70 rounded-md p-3 w-1/6 transition hover:scale-110 delay-100"
+      >
+        Create an Account
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
