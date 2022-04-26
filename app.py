@@ -4,8 +4,7 @@ from flask import Flask, render_template, redirect, request, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from models import db, connect_db, User, Playlist, Song, Playlist_Song
-import os
-import re
+from forms import CreatePlaylistForm, LoginForm, RegistrationForm
 
 app = Flask(__name__)
 
@@ -22,13 +21,22 @@ connect_db(app)
 @app.route("/")
 def show_home_page():
     """Renders home page"""
-    return render_template("base.html")
+    form = CreatePlaylistForm()
+    return render_template("base.html", form=form)
 
 
 @app.route("/login")
 def show_login_page():
     """Renders login page"""
-    return render_template("login.html")
+    form = LoginForm()
+    return render_template("login.html", form=form)
+
+
+@app.route("/register")
+def show_register_page():
+    """Renders registration page"""
+    form = RegistrationForm()
+    return render_template("register.html", form=form)
 
 
 ##############################################################################
