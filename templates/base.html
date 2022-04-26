@@ -23,13 +23,19 @@
     <nav class="relative bg-black sticky top-0 text-2xl z-50">
       <!-- Flex container -->
       <div class="flex justify-between">
-        <div class="font-heading text-lightGreen p-3">Vibify</div>
+        <div class="font-heading text-lightGreen p-3">
+          <a href="{{url_for('show_home_page')}}">Vibify</a>
+        </div>
         <!-- Menu items -->
         <div class="hidden md:flex space-x-2">
-          <a href="#description" class="text-white hover:text-darkBlue p-3"
+          <a
+            href="{{url_for('show_home_page')}}#description"
+            class="text-white hover:text-darkBlue p-3"
             >How it Works</a
           >
-          <a href="#" class="text-white hover:text-darkBlue p-3"
+          <a
+            href="{{url_for('show_login_page')}}"
+            class="text-white hover:text-darkBlue p-3"
             >Log In / Register</a
           >
         </div>
