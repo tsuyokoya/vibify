@@ -6,7 +6,18 @@
 
 Vibify is an app that allows music listeners to generate a Spotify playlist of songs based on the user’s indicated mood.
 
-## Composition (Technologies / API)
+## Technologies Used
+
+- Front End
+
+  - Tailwind CSS
+
+- Back End
+  - Flask
+  - SQLAlchemy
+  - PostgreSQL
+  - Axios
+  - Bcrypt
 
 ## Main Features
 
