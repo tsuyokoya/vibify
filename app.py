@@ -14,21 +14,25 @@ if app.config["ENV"] == "production":
 else:
     app.config.from_object("config.DevelopmentConfig")
 
-
-# uri = os.environ.get("DATABASE_URL", "postgresql:///vibify")
-# if uri.startswith("postgres://"):
-#     uri = uri.replace("postgres://", "postgresql://", 1)
-
-# Specify the database
-# app.config["SQLALCHEMY_DATABASE_URI"] = uri
-
 debug = DebugToolbarExtension(app)
-
 migrate = Migrate(app, db)
 connect_db(app)
 
+
+@app.route("/")
+def show_home_page():
+    """Renders home page"""
+    return render_template("base.html")
+
+
+@app.route("/login")
+def show_login_page():
+    """Renders login page"""
+    return render_template("login.html")
+
+
 ##############################################################################
-# User signup/login/logout
+# User login/logout
 
 CURR_USER_KEY = "curr_user"
 
@@ -55,10 +59,3 @@ def do_logout():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
-
-
-@app.route("/")
-def show_home_page():
-    """Renders home page"""
-
-    return render_template("base.html")
