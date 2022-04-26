@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Oleo+Script&family=Raleway:wght@600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../src/styles.css" />
+    <link rel="stylesheet" href="{{url_for('static',filename='main.css')}}" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
@@ -18,6 +18,21 @@
     <title>Vibify Home</title>
   </head>
   <body>
-    <h1>Hi</h1>
+    <!-- Navbar -->
+    <nav class="relative bg-black sticky top-0 text-2xl z-50">
+      <!-- Flex container -->
+      <div class="flex justify-between">
+        <div class="font-heading text-white p-3">Vibify</div>
+        <!-- Menu items -->
+        <div class="hidden md:flex space-x-2">
+          <a href="#description" class="text-white hover:text-darkBlue p-3"
+            >How it Works</a
+          >
+          <a href="#" class="text-white hover:text-darkBlue p-3"
+            >Log In / Register</a
+          >
+        </div>
+      </div>
+    </nav>
   </body>
 </html>
