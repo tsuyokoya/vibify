@@ -23,7 +23,9 @@
     <nav class="relative bg-black sticky top-0 text-2xl z-50">
       <!-- Flex container -->
       <div class="flex justify-between">
-        <div class="font-heading text-lightGreen p-3">
+        <div
+          class="font-heading text-lightGreen p-3 transition duration-1000 hover:scale-150"
+        >
           <a href="{{url_for('show_home_page')}}">Vibify</a>
         </div>
         <!-- Menu items -->
@@ -84,7 +86,7 @@
             {% endfor %}
             <div>
               <button
-                class="bg-lightGreen rounded-md p-3 w-1/6 hover:scale-110 hover:bg-black hover:text-lightGreen transition duration-1500"
+                class="border-2 border-white bg-lightGreen rounded-md p-3 w-1/6 hover:scale-110 hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"
               >
                 Generate
               </button>
