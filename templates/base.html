@@ -18,7 +18,7 @@
     />
     <title>{% block title %}Vibify Home{% endblock %}</title>
   </head>
-  <body>
+  <body class="overflow-auto">
     <!-- Navbar -->
     <nav class="relative bg-black sticky top-0 text-2xl z-50">
       <!-- Flex container -->
@@ -49,7 +49,6 @@
     <!-- Main content -->
     <main class="text-white">
       {% block content %}
-      <!-- Body container????? -->
       <!-- Generate playlist -->
       <div class="bg-darkBlue text-center py-14">
         <!-- Heading -->
@@ -85,7 +84,7 @@
             {% endfor %}
             <div>
               <button
-                class="bg-lightGreen hover:opacity-70 rounded-md p-3 w-1/6 transition hover:scale-110 delay-100"
+                class="bg-lightGreen rounded-md p-3 w-1/6 hover:scale-110 hover:bg-black hover:text-lightGreen transition duration-1500"
               >
                 Generate
               </button>
@@ -101,17 +100,17 @@
           <div class="flex justify-evenly">
             <a
               href="#"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:opacity-70 transition duration-1500"
               >Sad</a
             >
             <a
               href="#"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:opacity-70 transition duration-1500"
               >Neutral</a
             >
             <a
               href="#"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:opacity-70 transition duration-1500"
               >Happy</a
             >
           </div>
@@ -182,7 +181,6 @@
           </div>
         </div>
       </div>
-      {% endblock %}
       <!-- Footer -->
       <footer class="flex justify-between bg-black text-2xl">
         <div class="p-3">
@@ -208,6 +206,7 @@
           >
         </div>
       </footer>
+      {% endblock %}
     </main>
   </body>
 </html>

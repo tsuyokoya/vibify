@@ -1,35 +1,41 @@
 {% extends 'base.html' %} {% block title %}Vibify Login{% endblock %} {% block
 content %}
 <!-- Login -->
-<div class="flex justify-evenly bg-darkBlue text-center py-14">
+<div class="flex flex-col items-center bg-darkBlue py-14">
+  <h2 class="text-6xl text-lightGreen font-heading">Log in to your account</h2>
   <!-- Login form -->
-  <form action="#">
-    <h2>Log in to your account</h2>
-    <div>
-      <label for="login-email">Email</label>
-      <input
-        type="text"
-        id="login-email"
-        name="login-email"
-        class="w-1/4 mb-6"
-      />
+  <form action="#" class="text-2xl my-14 w-1/2 flex flex-col items-center">
+    {{form.hidden_tag()}} {% for field in form if field.widget.input_type !=
+    'hidden'%}
+    <div class="w-full flex justify-between">
+      {{field.label}} {{field (class="h-10 w-1/2 mb-6 text-black rounded-lg")}}
+      {% for error in field.errors %} {{error}} {% endfor %}
     </div>
-    <div>
-      <label for="login-password">Password</label>
-      <input
-        type="text"
-        id="login-password"
-        name="login-password"
-        class="w-1/4 mb-6"
-      />
-    </div>
-    <div>
-      <button
-        class="bg-lightGreen hover:opacity-70 rounded-md p-3 w-1/6 transition hover:scale-110 delay-100"
-      >
-        Log in
-      </button>
-    </div>
+    {% endfor %}
+
+    <button
+      class="border-2 border-white bg-lightGreen rounded-md p-3 mt-14 w-1/2 transition hover:border-lightGreen hover:bg-darkBlue hover:scale-110 duration-1500"
+    >
+      Log in
+    </button>
   </form>
 </div>
+<!-- Footer -->
+<footer class="flex justify-end bg-black text-2xl absolute inset-x-0 bottom-0">
+  <div class="p-3 space-x-2">
+    <a
+      href="https://www.linkedin.com/in/tsuyoshi-koyama-2018/"
+      class="hover:text-darkBlue"
+      target="blank"
+      >Contact</a
+    >
+    <a
+      href="https://github.com/tsuyokoya"
+      class="hover:text-darkBlue"
+      target="blank"
+      >Github</a
+    >
+  </div>
+</footer>
+
 {% endblock %}
