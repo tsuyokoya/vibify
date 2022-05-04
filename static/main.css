@@ -579,6 +579,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: none;
 }
 
+.h-full {
+  height: 100%;
+}
+
 .h-10 {
   height: 2.5rem;
 }
@@ -645,12 +649,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-radius: 0.5rem;
 }
 
-.border-4 {
-  border-width: 4px;
-}
-
 .border-2 {
   border-width: 2px;
+}
+
+.border-4 {
+  border-width: 4px;
 }
 
 .border-solid {
