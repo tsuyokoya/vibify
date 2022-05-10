@@ -4,7 +4,11 @@ block content %}
 <div class="flex flex-col items-center bg-deepPurple py-14">
   <h2 class="text-6xl font-heading">New to Vibify? Sign Up</h2>
   <!-- Registration form -->
-  <form action="#" class="text-2xl my-14 w-1/2 flex flex-col items-center">
+  <form
+    action="#"
+    method="POST"
+    class="text-2xl my-14 w-1/2 flex flex-col items-center"
+  >
     {{form.hidden_tag()}} {% for field in form if field.widget.input_type !=
     'hidden'%}
     <div class="w-full flex justify-between">
@@ -13,9 +17,29 @@ block content %}
     </div>
     {% endfor %}
     <button
-      class="border-2 border-white bg-black rounded-md p-3 mt-14 w-1/2 transition hover:border-white hover:bg-deepPurple hover:scale-110 duration-1500"
+      type="submit"
+      name="register-btn"
+      formaction="/register"
+      class="border-2 border-white bg-black rounded-md p-3 mt-8 w-1/2 transition hover:border-white hover:bg-deepPurple hover:scale-110 duration-1500"
     >
       Create an Account
+    </button>
+  </form>
+  <p class="text-4xl font-heading">Or, sign up with Spotify:</p>
+  <form
+    action="/authorize"
+    class="text-2xl my-14 w-1/4 flex flex-col items-center"
+  >
+    <button
+      type="submit"
+      name="register-spotify-btn"
+      class="flex justify-center border-2 border-white bg-black rounded-md p-3 mt-8 w-full transition hover:border-white hover:bg-deepPurple hover:scale-110 duration-1500"
+    >
+      <img
+        src="../static/images/spotify-icons-logos/logos/Spotify_Logo_RGB_Green.png"
+        alt="Spotify logo"
+        class="h-10"
+      />
     </button>
   </form>
 </div>
