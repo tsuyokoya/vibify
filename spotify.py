@@ -5,9 +5,9 @@ import urllib
 from flask import session
 
 
-def create_state_key():
+def create_state_key(num):
     characters = string.ascii_letters + string.digits
-    return "".join(random.choice(characters) for i in range(15))
+    return "".join(random.choice(characters) for i in range(num))
 
 
 def base64_encode(client_credentials):
@@ -16,7 +16,7 @@ def base64_encode(client_credentials):
 
 def authorize_user(client_id, redirect_uri, scope):
     """Authorizes the use of user Spotify account data"""
-    state_key = create_state_key()
+    state_key = create_state_key(15)
 
     session["state_key"] = state_key
 
