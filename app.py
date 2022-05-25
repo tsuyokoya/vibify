@@ -4,6 +4,7 @@ import base64
 import requests
 import spotify
 import urllib
+import logging
 from flask import Flask, render_template, redirect, request, session, g, make_response
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
@@ -20,6 +21,11 @@ else:
 debug = DebugToolbarExtension(app)
 migrate = Migrate(app, db)
 connect_db(app)
+logging.basicConfig(
+    filename="logs.log",
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(name)s : %(message)s",
+)
 
 token_url = "https://accounts.spotify.com/api/token"
 
@@ -83,7 +89,7 @@ def register_with_spotify():
     redirect_uri = app.config["REDIRECT_URI"]
     scope = app.config["SCOPE"]
     authorize_url = spotify.authorize_user(client_id, redirect_uri, scope)
-    print("************", authorize_url)
+    app.logger.info(authorize_url)
     return redirect(authorize_url)
 
 
