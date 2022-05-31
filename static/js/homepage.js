@@ -4,8 +4,9 @@ const playlistTitle = document.querySelector("#playlist-title");
 const playlistVibe = document.querySelector("#playlist-vibe");
 
 // Update Playlist Title on cassette image based on user input
-playlistTitleInput.addEventListener("keyup", (e) => {
+playlistTitleInput.addEventListener("input", (e) => {
   const val = e.target.value;
+  console.log(val);
   if (val === "") {
     playlistTitle.innerText = "Playlist Title";
   } else {
