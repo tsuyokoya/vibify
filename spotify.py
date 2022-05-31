@@ -6,6 +6,8 @@ from flask import session
 
 
 class SpotifyAPI:
+    authorize_base_url = "https://accounts.spotify.com/en/authorize?"
+
     def create_state_key(self):
         characters = string.ascii_letters + string.digits
         return "".join(random.choice(characters) for i in range(15))
@@ -19,7 +21,6 @@ class SpotifyAPI:
 
         session["state_key"] = state_key
 
-        authorize_base_url = "https://accounts.spotify.com/en/authorize?"
         query = {
             "response_type": "code",
             "client_id": client_id,
@@ -27,8 +28,7 @@ class SpotifyAPI:
             "scope": scope,
             "state": state_key,
         }
-        authorize_url = authorize_base_url + urllib.parse.urlencode(query)
-
+        authorize_url = self.authorize_base_url + urllib.parse.urlencode(query)
         return authorize_url
 
     def get_token_headers(self, client_creds):
