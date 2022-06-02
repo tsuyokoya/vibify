@@ -71,17 +71,17 @@
             />
           </div>
           <div class="absolute font-heading inset-x-1/4 top-36 text-3xl">
-            <p class="text-black">Playlist Title</p>
+            <p id="playlist-title" class="text-black">Playlist Title</p>
           </div>
           <div class="absolute font-heading inset-x-1/4 top-44 text-xl">
-            <p class="text-black">Vibe: 😐</p>
+            <p id="playlist-vibe" class="text-black">Vibe: Neutral 😐</p>
           </div>
           <form action="#">
             {{form.hidden_tag()}} {% for field in form if
             field.widget.input_type != 'hidden'%}
             <div>
-              {{field.label}} {{field (class="w-1/2 mb-6")}} {% for error in
-              field.errors %} {{error}} {% endfor %}
+              {{field.label}} {{field (class="vibify-inputs text-black w-1/2
+              mb-6")}} {% for error in field.errors %} {{error}} {% endfor %}
             </div>
             {% endfor %}
             <div>
@@ -210,5 +210,6 @@
       </footer>
       {% endblock %}
     </main>
+    <script src="../static/js/homepage.js"></script>
   </body>
 </html>

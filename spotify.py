@@ -4,7 +4,6 @@ import string
 import urllib
 from flask import session
 
-
 class SpotifyAPI:
     authorize_base_url = "https://accounts.spotify.com/en/authorize?"
 
