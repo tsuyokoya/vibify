@@ -1,3 +1,4 @@
+from multiprocessing import AuthenticationError
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from sqlalchemy.dialects.postgresql import UUID
@@ -44,12 +45,26 @@ class User(db.Model):
         )
 
         db.session.add(user)
+        db.session.commit()
         return user
 
     playlists = db.relationship(
         "Playlist",
         backref="user",
     )
+
+    @classmethod
+    def authenticate(cls, email, password):
+        """Authenticate user login information"""
+
+        user = cls.query.filter_by(email=email).first()
+
+        if user:
+            is_auth = bcrypt.check_password_hash(user.password, password)
+            if is_auth:
+                return user
+
+        return False
 
 
 # - playlists
