@@ -11,7 +11,7 @@ class Config(object):
     CLIENT_ID = os.environ.get("CLIENT_ID")
     CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
     REDIRECT_URI = "http://127.0.0.1:5000/callback"
-    SCOPE = "user-read-email user-top-read"
+    SCOPE = "user-read-email user-top-read user-follow-read user-library-read playlist-modify-private"
 
 
 class ProductionConfig(Config):
