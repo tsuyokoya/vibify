@@ -4,12 +4,13 @@ import base64
 import requests
 import urllib
 import logging
-from flask import Flask, render_template, redirect, request, session, g, make_response
+from flask import Flask, render_template, redirect, request, session, g, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from models import db, connect_db, User, Playlist, Song, Playlist_Song
 from forms import CreatePlaylistForm, LoginForm, RegistrationForm
 from spotify import SpotifyAPI
+from helpers import get_user_spotify_data
 
 app = Flask(__name__)
 
@@ -58,29 +59,53 @@ def add_user_to_g():
 
 
 def do_login(user):
-    """Log in user."""
-
     session[CURR_USER_KEY] = user.id
 
 
 def do_logout():
-    """Logout user."""
-
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def show_login_page():
-    """Renders login page"""
+    """Renders login page / logs in user"""
     form = LoginForm()
+
+    if form.validate_on_submit():
+        user = User.authenticate(form.email.data, form.password.data)
+
+        if user:
+            do_login(user)
+            flash("Successfully logged in", "success")
+            return redirect("/")
+
+        flash("Invalid email / password", "warning")
+
     return render_template("login.html", form=form)
 
 
-@app.route("/register")
+@app.route("/logout")
+def logout_user():
+    do_logout()
+    flash("Logged out", "warning")
+    return redirect("/")
+
+
+@app.route("/register", methods=["GET", "POST"])
 def show_register_page():
-    """Renders registration page"""
+    """Renders registration page / registers new user"""
     form = RegistrationForm()
+
+    if form.validate_on_submit():
+        user = User.register(form.first_name.data, form.email.data, form.password.data)
+
+        if user:
+            do_login(user)
+            flash("Successfully logged in", "success")
+            return redirect("/")
+
+        flash("Invalid email / password", "warning")
     return render_template("register.html", form=form)
 
 
@@ -98,7 +123,7 @@ def register_with_spotify():
 
 @app.route("/callback")
 def callback():
-    print("******************", request.args)
+    """Exchanges the authorization code for an Access Token to complete spotify auth process"""
     # request.args returns a code and the state
     code = request.args.get("code")
     state = request.args.get("state")
@@ -117,4 +142,14 @@ def callback():
 
         if post_response.status_code == 200:
             json = post_response.json()
+            user_data = get_user_spotify_data(json)
+            user = User.register(
+                user_data["display_name"], user_data["email"], "password"
+            )
+            do_login(user)
             return redirect("/")
+
+
+@app.route("/playlists")
+def show_playlists_page():
+    return render_template("playlists.html")
