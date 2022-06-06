@@ -35,6 +35,15 @@
             class="text-white hover:text-darkBlue p-3"
             >How it Works</a
           >
+          {% if session["curr_user"]%}
+          <a href="#" class="text-white hover:text-darkBlue p-3">Playlists</a>
+          <a
+            href="{{url_for('logout_user')}}"
+            class="text-white hover:text-darkBlue p-3"
+            >Log Out</a
+          >
+          <span class="text-lightGreen p-3">Hi, {{g.user["first_name"]}}</span>
+          {% else %}
           <a
             href="{{url_for('show_login_page')}}"
             class="text-white hover:text-darkBlue p-3"
@@ -45,12 +54,21 @@
             class="text-white hover:text-darkBlue p-3"
             >Register</a
           >
+          {% endif %}
         </div>
       </div>
     </nav>
     <!-- Main content -->
     <main class="text-white">
-      {% block content %}
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, msg in get_flashed_messages(with_categories =
+      true)%}
+      <p
+        class="text-center text-black {{'bg-pink' if category =='warning' else 'bg-lightGreen'}}"
+      >
+        {{msg}}
+      </p>
+      {% endfor %} {% endif %} {% endwith%} {% block content %}
       <!-- Generate playlist -->
       <div class="bg-darkBlue text-center py-14">
         <!-- Heading -->

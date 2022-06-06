@@ -7,7 +7,11 @@ content %}
       Log in to your account
     </h2>
     <!-- Login form -->
-    <form action="#" class="text-2xl my-14 w-1/2 flex flex-col items-center">
+    <form
+      action="{{url_for('show_login_page')}}"
+      method="POST"
+      class="text-2xl my-14 w-1/2 flex flex-col items-center"
+    >
       {{form.hidden_tag()}} {% for field in form if field.widget.input_type !=
       'hidden'%}
       <div class="w-full flex justify-between">
