@@ -92,6 +92,13 @@ class Playlist(db.Model):
         backref="playlists",
     )
 
+    @classmethod
+    def create(cls, name, description, user_id):
+        playlist = Playlist(name=name, description=description, user_id=user_id)
+        db.session.add(playlist)
+        db.session.commit()
+        return playlist
+
 
 # - songs
 #   - id: TEXT, PK (uuid)
