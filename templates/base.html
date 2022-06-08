@@ -64,7 +64,7 @@
       messages %} {% for category, msg in get_flashed_messages(with_categories =
       true)%}
       <p
-        class="text-center text-black {{'bg-pink' if category =='warning' else 'bg-lightGreen'}}"
+        class="text-center text-black {{'bg-rose-400' if category =='danger' else 'bg-lightGreen'}}"
       >
         {{msg}}
       </p>
@@ -94,7 +94,7 @@
           <div class="absolute font-heading inset-x-1/4 top-44 text-xl">
             <p id="playlist-vibe" class="text-black">Vibe: Neutral 😐</p>
           </div>
-          <form action="#">
+          <form action="{{url_for('show_home_page')}}" method="POST">
             {{form.hidden_tag()}} {% for field in form if
             field.widget.input_type != 'hidden'%}
             <div>
