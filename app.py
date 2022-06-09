@@ -78,46 +78,11 @@ def do_logout():
         del session[CURR_USER_KEY]
 
 
-@app.route("/login", methods=["GET", "POST"])
-def show_login_page():
-    """Renders login page / logs in user"""
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        user = User.authenticate(form.email.data, form.password.data)
-
-        if user:
-            do_login(user)
-            flash("Successfully logged in", "success")
-            return redirect("/")
-
-        flash("Invalid email / password", "danger")
-
-    return render_template("login.html", form=form)
-
-
 @app.route("/logout")
 def logout_user():
     do_logout()
     flash("Logged out", "danger")
     return redirect("/")
-
-
-@app.route("/register", methods=["GET", "POST"])
-def show_register_page():
-    """Renders registration page / registers new user"""
-    form = RegistrationForm()
-
-    if form.validate_on_submit():
-        user = User.register(form.first_name.data, form.email.data, form.password.data)
-
-        if user:
-            do_login(user)
-            flash("Successfully logged in", "success")
-            return redirect("/")
-
-        flash("Invalid email / password", "danger")
-    return render_template("register.html", form=form)
 
 
 @app.route("/authorize")
@@ -142,6 +107,7 @@ def callback():
         user_data = spotify.get_user_spotify_data()
         user = User.register(user_data["display_name"], user_data["email"], "password")
         do_login(user)
+        flash("Successfully logged in", "success")
         return redirect("/")
 
 
