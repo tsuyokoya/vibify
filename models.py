@@ -1,4 +1,3 @@
-from multiprocessing import AuthenticationError
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from sqlalchemy.dialects.postgresql import UUID
@@ -28,20 +27,16 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    first_name = db.Column(db.String(25), nullable=False)
+    name = db.Column(db.String(25), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.Text, nullable=False)
 
     @classmethod
-    def register(cls, first_name, email, password):
+    def register(cls, name, email):
         """Register user. Password is hashed. Adds user to system."""
 
-        hashed_pwd = bcrypt.generate_password_hash(password).decode("UTF-8")
-
         user = User(
-            first_name=first_name,
+            name=name,
             email=email,
-            password=hashed_pwd,
         )
 
         db.session.add(user)
@@ -81,7 +76,6 @@ class Playlist(db.Model):
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String(25), nullable=False)
-    description = db.Column(db.String(100))
     user_id = db.Column(
         UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="cascade")
     )
@@ -93,8 +87,8 @@ class Playlist(db.Model):
     )
 
     @classmethod
-    def create(cls, name, description, user_id):
-        playlist = Playlist(name=name, description=description, user_id=user_id)
+    def create(cls, name, user_id):
+        playlist = Playlist(name=name, user_id=user_id)
         db.session.add(playlist)
         db.session.commit()
         return playlist
@@ -114,7 +108,7 @@ class Song(db.Model):
 
     __tablename__ = "songs"
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    uri = db.Column(db.String, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
     artist = db.Column(db.String(50), nullable=False)
     album = db.Column(db.String(50))
