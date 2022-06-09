@@ -29,31 +29,37 @@
           <a href="{{url_for('show_home_page')}}">Vibify</a>
         </div>
         <!-- Menu items -->
-        <div class="hidden md:flex space-x-2">
+        <div class="hidden md:flex space-x-2 flex items-center mr-2">
           <a
             href="{{url_for('show_home_page')}}#description"
-            class="text-white hover:text-darkBlue p-3"
+            class="text-white hover:text-lightGreen p-3"
             >How it Works</a
           >
           {% if session["curr_user"]%}
           <a href="#" class="text-white hover:text-darkBlue p-3">Playlists</a>
           <a
             href="{{url_for('logout_user')}}"
-            class="text-white hover:text-darkBlue p-3"
+            class="text-white hover:text-lightGreen p-3"
             >Log Out</a
           >
           <span class="text-lightGreen p-3">Hi, {{g.user["first_name"]}}</span>
           {% else %}
           <a
             href="{{url_for('show_login_page')}}"
-            class="text-white hover:text-darkBlue p-3"
+            class="text-white hover:text-lightGreen p-3"
             >Log In</a
           >
           <a
-            href="{{url_for('show_register_page')}}"
-            class="text-white hover:text-darkBlue p-3"
-            >Register</a
+            href="{{url_for('register_with_spotify')}}"
+            class="flex justify-center items-center text-white p-3 h-1/2 border-2 border-white rounded-md transition hover:text-lightGreen hover:border-lightGreen hover:bg-white hover:scale-110 duration-1500"
           >
+            <img
+              src="../static/images/spotify-icons-logos/icons/Spotify_Icon_RGB_Green.png"
+              alt="Spotify logo"
+              class="h-6"
+            />
+            Sign In
+          </a>
           {% endif %}
         </div>
       </div>
@@ -207,23 +213,23 @@
           <a
             href="https://www.flaticon.com/free-icons/cassette"
             title="cassette icons"
-            class="hover:text-darkBlue text-sm"
+            class="hover:text-lightGreen text-sm"
             >Cassette icons created by Freepik - Flaticon</a
           >
         </div>
         <div class="p-3 space-x-2">
           <a
             href="https://www.linkedin.com/in/tsuyoshi-koyama-2018/"
-            class="hover:text-darkBlue"
+            class="hover:text-lightGreen"
             target="blank"
-            >Contact</a
-          >
+            ><i class="fa-brands fa-linkedin fa-xl"></i
+          ></a>
           <a
             href="https://github.com/tsuyokoya"
-            class="hover:text-darkBlue"
+            class="hover:text-lightGreen"
             target="blank"
-            >Github</a
-          >
+            ><i class="fa-brands fa-github fa-xl"></i
+          ></a>
         </div>
       </footer>
       {% endblock %}
