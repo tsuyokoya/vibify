@@ -4,9 +4,10 @@ import logging
 from flask import Flask, render_template, redirect, request, session, g, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
-from models import db, connect_db, User, Playlist, Song, Playlist_Song
+from models import db, connect_db, User, Playlist
 from forms import CreatePlaylistForm
-from spotify import SpotifyAPI
+from spotify import spotify
+from authentication import auth
 
 app = Flask(__name__)
 
@@ -16,19 +17,13 @@ else:
     app.config.from_object("config.DevelopmentConfig")
 
 debug = DebugToolbarExtension(app)
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, compare_type=True)
 connect_db(app)
 logging.basicConfig(
     filename="logs.log",
     level=logging.DEBUG,
     format="%(asctime)s %(levelname)s %(name)s : %(message)s",
 )
-
-client_id = app.config["CLIENT_ID"]
-client_secret = app.config["CLIENT_SECRET"]
-redirect_uri = app.config["REDIRECT_URI"]
-scope = app.config["SCOPE"]
-spotify = SpotifyAPI(client_id, client_secret, redirect_uri, scope)
 
 
 @app.route("/home", methods=["GET", "POST"])
@@ -39,9 +34,15 @@ def show_home_page():
 
     if form.validate_on_submit():
         user_id = g.user.id or "guest"
-        Playlist.create(form.title.data, form.vibe.data, user_id)
-        playlist = spotify.create_user_playlist()
-        app.logger.info(playlist)
+        vibe = round(form.vibe.data, 2)
+        title = form.title.data
+
+        if not title:
+            title = f"my-playlist-vibe-{vibe}"
+
+        session["title"] = title
+        playlist = Playlist.create(title, user_id)
+        spotify.create_user_playlist(vibe, playlist.id)
 
         flash("Successfully created playlist", "success")
         return redirect("/playlists")
@@ -85,7 +86,7 @@ def logout_user():
 @app.route("/authorize")
 def register_with_spotify():
     """Authorizes use of user Spotify account data"""
-    authorize_url = spotify.get_authorization_url()
+    authorize_url = auth.get_authorization_url()
     app.logger.info(authorize_url)
     return redirect(authorize_url)
 
@@ -99,11 +100,15 @@ def callback():
 
     if state != session["state_key"]:
         return False
-    is_authorized = spotify.authorize_user(code)
+    is_authorized = auth.authorize_user(code)
     if is_authorized:
         user_data = spotify.get_user_spotify_data()
-        user = User.register(user_data["display_name"], user_data["email"], "password")
-        do_login(user)
+        is_registered = User.query.filter_by(email=user_data["email"]).first()
+        if not is_registered:
+            user = User.register(user_data["display_name"], user_data["email"])
+            do_login(user)
+        else:
+            do_login(is_registered)
         flash("Successfully logged in", "success")
         return redirect("/")
 
