@@ -1,112 +1,15 @@
-import base64
-from os import access
-import random
-import string
 import requests
-import pytz
 from urllib.parse import urlencode
-from datetime import datetime, timedelta
 from flask import session
+from decimal import Decimal
+from random import shuffle
+from models import db, Song, Playlist_Song
+
+from authentication import auth
 
 
 class SpotifyAPI:
-    TOKEN_URL = token_url = "https://accounts.spotify.com/api/token"
-    AUTH_BASE_URL = "https://accounts.spotify.com/en/authorize?"
     ENDPOINT_BASE_URL = "https://api.spotify.com/v1"
-
-    def __init__(self, client_id, client_secret, redirect_uri, scope):
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.redirect_uri = redirect_uri
-        self.scope = scope
-
-    def create_state_key(self):
-        characters = string.ascii_letters + string.digits
-        return "".join(random.choice(characters) for i in range(15))
-
-    def base64_encode(self, client_credentials):
-        return base64.b64encode(client_credentials.encode())
-
-    def get_authorization_url(self):
-        """Returns authorization redirect URL"""
-        state_key = self.create_state_key()
-
-        session["state_key"] = state_key
-
-        query = {
-            "response_type": "code",
-            "client_id": self.client_id,
-            "redirect_uri": self.redirect_uri,
-            "scope": self.scope,
-            "state": state_key,
-        }
-        authorize_url = self.AUTH_BASE_URL + urlencode(query)
-        return authorize_url
-
-    def authorize_user(self, code):
-        token_headers = self.get_token_headers()
-        token_data = self.get_token_data(code)
-        post_response = requests.post(
-            self.TOKEN_URL, headers=token_headers, data=token_data
-        )
-        if post_response.status_code == 200:
-            response_json = post_response.json()
-            access_duration = response_json["expires_in"]
-            expires_in = datetime.now() + timedelta(seconds=access_duration)
-            session["expires_in"] = pytz.utc.localize(expires_in)
-
-            access_token = response_json["access_token"]
-            refresh_token = response_json["refresh_token"]
-            headers = {"Authorization": f"Bearer {access_token}"}
-
-            session["access_token"] = access_token
-            session["refresh_token"] = refresh_token
-            session["headers"] = headers
-
-            return True
-
-    def get_token_headers(self):
-        client_creds = f"{self.client_id}:{self.client_secret}"
-        client_creds_b64 = self.base64_encode(client_creds)
-        return {
-            "Authorization": f"Basic {client_creds_b64.decode()}",
-            "Content-Type": "application/x-www-form-urlencoded",
-        }
-
-    def get_token_data(self, code):
-        return {
-            "code": code,
-            "redirect_uri": self.redirect_uri,
-            "grant_type": "authorization_code",
-        }
-
-    def get_refreshed_token(self):
-        data = {
-            "grant_type": "refresh_token",
-            "refresh_token": session["refresh_token"],
-        }
-        headers = self.get_token_headers()
-        post_response = requests.post(self.TOKEN_URL, data=data, headers=headers).json()
-
-        access_token = post_response["access_token"]
-        access_duration = post_response["expires_in"]
-        expires_in = datetime.now() + timedelta(seconds=access_duration)
-
-        session["expires_in"] = pytz.utc.localize(expires_in)
-        session["access_token"] = access_token
-        return post_response
-
-    def get_api_access_headers(self):
-        expires = session["expires_in"]
-        now = datetime.now()
-
-        if expires < pytz.utc.localize(now):
-            self.get_refreshed_token()
-            return self.get_api_access_headers()
-        access_token = session["access_token"]
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        return headers
 
     def get_user_spotify_data(self):
         lookup_url = self.ENDPOINT_BASE_URL + "/me"
@@ -115,35 +18,119 @@ class SpotifyAPI:
         user_data = requests.get(lookup_url, headers=headers)
         return user_data.json()
 
-    def create_user_playlist(self):
-        # featured_playlists_ids = self.get_featured_playlists()
-        new_albums_ids = self.get_new_albums()
-        track_ids = self.get_albums_tracks(new_albums_ids)
-        raise
+    def create_user_playlist(self, vibe, playlist_id):
+        headers = auth.get_api_access_headers()
 
-    def get_new_albums(self):
+        new_albums_ids = self.get_new_albums(headers)
+        track_ids = self.get_albums_tracks(headers, new_albums_ids)
+        grouped_track_ids = self.group_track_ids(track_ids, 100)
+        tracks_features = self.get_tracks_audio_features(headers, grouped_track_ids)
+        playlist_tracks = self.filter_tracks(tracks_features, vibe)[:20]
+        playlist_tracks_data = self.get_tracks_data(
+            headers, playlist_tracks, playlist_id
+        )
+        session["playlist"] = playlist_tracks_data
+        return playlist_tracks_data
+
+    def group_track_ids(self, ids, n):
+        grouped_list = [ids[i : n + i] for i in range(0, len(ids), n)]
+        return grouped_list
+
+    def get_tracks_audio_features(self, headers, ids):
+        audio_features = []
+
+        for group in ids:
+            string_ids = ",".join(group)
+            query = {"ids": string_ids}
+            endpoint = self.ENDPOINT_BASE_URL + f"/audio-features?{urlencode(query)}"
+
+            features_data = requests.get(endpoint, headers=headers).json()
+            features_list = features_data["audio_features"]
+
+            for track in features_list:
+                audio_features.append(
+                    {
+                        "id": track["id"],
+                        "danceability": track["danceability"],
+                        "energy": track["energy"],
+                        "valence": track["valence"],
+                    }
+                )
+
+        return audio_features
+
+    def get_tracks_data(self, headers, ids, playlist_id):
+        tracks_data = []
+        string_ids = ",".join(ids)
+        query = {"ids": string_ids}
+        endpoint = self.ENDPOINT_BASE_URL + f"/tracks?{urlencode(query)}"
+
+        tracks_data_list = requests.get(endpoint, headers=headers).json()
+        for track in tracks_data_list["tracks"]:
+            id = track["id"]
+            name = track["name"]
+            preview_url = track["preview_url"]
+            artist = track["artists"][0]["name"]
+            album_name = track["album"]["name"]
+            album_image_url = track["album"]["images"][0]["url"]
+
+            if not Song.query.filter_by(id=id).first():
+                song = Song.create(
+                    id, name, preview_url, artist, album_name, album_image_url
+                )
+            Playlist_Song.create(playlist_id, song.id)
+
+            tracks_data.append(
+                {
+                    "id": id,
+                    "name": name,
+                    "preview_url": preview_url,
+                    "artist": artist,
+                    "album_name": album_name,
+                    "album_image_url": album_image_url,
+                }
+            )
+        print("TRACKS DATA", tracks_data)
+        return tracks_data
+
+    def filter_tracks(self, tracks_features, vibe):
+        spread = Decimal(0.1)
+        filtered_tracks = [
+            track["id"]
+            for track in tracks_features
+            if vibe - spread <= track["valence"] <= vibe + spread
+        ]
+        return filtered_tracks
+
+    def get_new_albums(self, headers):
         new_albums_ids = []
-        endpoint = self.ENDPOINT_BASE_URL + "/browse/new-releases"
-        headers = self.get_api_access_headers()
+        query = {"limit": 50}
+        endpoint = self.ENDPOINT_BASE_URL + f"/browse/new-releases?{urlencode(query)}"
 
         new_albums_data = requests.get(endpoint, headers=headers).json()
         new_albums_items = new_albums_data["albums"]["items"]
 
         new_albums_ids = [album["id"] for album in new_albums_items]
+        grouped_album_ids = self.group_track_ids(new_albums_ids, 20)
 
-        return new_albums_ids
+        return grouped_album_ids
 
-    def get_albums_tracks(self, ids):
-        string_ids = ",".join(ids)
-        query = {"ids": string_ids}
-        endpoint = self.ENDPOINT_BASE_URL + f"/albums?{urlencode(query)}"
-        headers = self.get_api_access_headers()
+    def get_albums_tracks(self, headers, albums_ids):
+        tracks = []
+        for group in albums_ids:
 
-        albums_data = requests.get(endpoint, headers=headers).json()
-        albums_list = albums_data["albums"]
+            string_ids = ",".join(group)
+            query = {"ids": string_ids}
+            endpoint = self.ENDPOINT_BASE_URL + f"/albums?{urlencode(query)}"
 
-        tracks_ids = [
-            [track["id"] for track in album["tracks"]["items"]] for album in albums_list
-        ]
+            albums_data = requests.get(endpoint, headers=headers).json()
+            albums_list = albums_data["albums"]
 
-        return tracks_ids
+            for album in albums_list:
+                for track in album["tracks"]["items"]:
+                    tracks.append(track["id"])
+        shuffle(tracks)
+        return tracks
+
+
+spotify = SpotifyAPI()
