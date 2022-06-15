@@ -23,9 +23,7 @@
     <nav class="sticky bg-black top-0 text-2xl z-50 w-full">
       <!-- Flex container -->
       <div class="flex justify-between">
-        <div
-          class="font-heading text-lightGreen p-3 transition duration-1000 hover:scale-150"
-        >
+        <div class="font-heading text-lightGreen p-3 hover:text-white">
           <a href="{{url_for('show_home_page')}}">Vibify</a>
         </div>
         <!-- Menu items -->
@@ -102,9 +100,10 @@
             method="POST"
           >
             {{form.hidden_tag()}}
-            <div>
+            <div class="border-2 border-white rounded-md">
               {{form.title.label}} {{form.title(class="vibify-inputs text-black
-              w-full rounded-md")}} {% if form.title.errors %}
+              w-full rounded-md text-sm text-slate-500 p-3")}} {% if
+              form.title.errors %}
               <ul class="errors">
                 {% for error in form.title.errors %}
                 <li>{{ error }}</li>
@@ -112,9 +111,9 @@
               </ul>
               {% endif %}
             </div>
-            <div>
+            <div class="border-2 border-white rounded-md">
               {{form.vibe.label}} {{form.vibe(class="vibify-inputs w-full
-              rounded-md appearance-none")}} {% if form.vibe.errors %}
+              rounded-md appearance-none p-2")}} {% if form.vibe.errors %}
               <ul class="errors">
                 {% for error in form.vibe.errors %}
                 <li>{{ error }}</li>
@@ -139,17 +138,17 @@
           <!-- Playlists -->
           <div class="flex justify-evenly">
             <a
-              href="#"
+              href="/playlists/sad"
               class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Sad</a
             >
             <a
-              href="#"
+              href="/playlists/neutral"
               class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Neutral</a
             >
             <a
-              href="#"
+              href="/playlists/happy"
               class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Happy</a
             >
