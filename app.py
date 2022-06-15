@@ -93,6 +93,7 @@ def do_logout():
 @app.route("/logout")
 def logout_user():
     do_logout()
+    session.clear()
     flash("Logged out", "danger")
     return redirect("/")
 

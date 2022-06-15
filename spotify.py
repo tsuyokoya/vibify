@@ -79,23 +79,19 @@ class SpotifyAPI:
         for track in tracks_data_list["tracks"]:
             id = track["id"]
             name = track["name"]
-            preview_url = track["preview_url"]
             artist = track["artists"][0]["name"]
             album_name = track["album"]["name"]
             album_image_url = track["album"]["images"][0]["url"]
 
             if g.user:
                 if not Song.query.filter_by(id=id).first():
-                    song = Song.create(
-                        id, name, preview_url, artist, album_name, album_image_url
-                    )
+                    song = Song.create(id, name, artist, album_name, album_image_url)
                 Playlist_Song.create(session["playlist_id"], song.id)
 
             tracks_data.append(
                 {
                     "id": id,
                     "name": name,
-                    "preview_url": preview_url,
                     "artist": artist,
                     "album_name": album_name,
                     "album_image_url": album_image_url,
