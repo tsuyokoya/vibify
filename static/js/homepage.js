@@ -6,26 +6,25 @@ const playlistVibe = document.querySelector("#playlist-vibe");
 // Update Playlist Title on cassette image based on user input
 playlistTitleInput.addEventListener("input", (e) => {
   const val = e.target.value;
-  console.log(val);
   if (val === "") {
-    playlistTitle.innerText = "Playlist Title";
+    playlistTitle.innerText = "My Playlist Title";
   } else {
     playlistTitle.innerText = val;
   }
 });
 
 // Update Playlist Vibe emoji on cassette image based on user input
-playlistVibeInput.addEventListener("change", (e) => {
+playlistVibeInput.addEventListener("input", (e) => {
   const val = e.target.value;
-  if (val <= 2) {
-    playlistVibe.innerText = "Vibe: So Sad 😭";
-  } else if (val <= 4) {
-    playlistVibe.innerText = "Vibe: A little sad 🥲";
-  } else if (val <= 6) {
-    playlistVibe.innerText = "Vibe: Neutral 😐";
-  } else if (val <= 8) {
-    playlistVibe.innerText = "Vibe: A little happy 😀";
+  if (val <= 0.2) {
+    playlistVibe.innerText = "😭";
+  } else if (val <= 0.4) {
+    playlistVibe.innerText = "🥲";
+  } else if (val <= 0.6) {
+    playlistVibe.innerText = "😐";
+  } else if (val <= 0.8) {
+    playlistVibe.innerText = "😀";
   } else {
-    playlistVibe.innerText = "Vibe: So Happy 😆";
+    playlistVibe.innerText = "😆";
   }
 });
