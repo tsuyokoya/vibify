@@ -11,7 +11,7 @@ class CreatePlaylistForm(FlaskForm):
 
     title = StringField(
         "Playlist Title",
-        render_kw={"placeholder": "Enter playlist title"},
+        render_kw={"placeholder": "My playlist title"},
         validators=[Length(max=20)],
     )
     vibe = DecimalRangeField(validators=[NumberRange(min=0, max=1)])
