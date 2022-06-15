@@ -13,18 +13,22 @@ window.onload = () => {
   const albumImage = document.querySelector("#album-image");
   const baseEmbedURL = "https://open.spotify.com/embed/track/";
 
+  // sets active background color for first track in playlist
   tracks[0].classList.remove("bg-slate-700");
   tracks[0].classList.add("bg-lightGreen");
 
   tracks.forEach((track) => {
     track.addEventListener("click", (e) => {
+      // removes active background color from track
       removeActiveSelection(tracks);
+
+      // sets active background color for selected track
       track.classList.remove("bg-slate-700");
       track.classList.add("bg-lightGreen");
-      const spotifyId = e.target.attributes["data-id"]["value"];
-      console.log(e.target.attributes);
-      iframe.src = baseEmbedURL + spotifyId;
 
+      // updates album image and player url for selected track
+      const spotifyId = e.target.attributes["data-id"]["value"];
+      iframe.src = baseEmbedURL + spotifyId;
       albumImage.src = e.target.attributes["data-image"]["value"];
     });
   });
