@@ -25,6 +25,7 @@ class Authentication:
         self.scope = scope
 
     def create_state_key(self):
+        """Generates state key for purposes of CSRF protection"""
         characters = string.ascii_letters + string.digits
         return "".join(random.choice(characters) for i in range(15))
 
@@ -50,9 +51,11 @@ class Authentication:
     def authorize_user(self, code):
         token_headers = self.get_token_headers()
         token_data = self.get_token_data(code)
+
         post_response = requests.post(
             self.TOKEN_URL, headers=token_headers, data=token_data
         )
+
         if post_response.status_code == 200:
             response_json = post_response.json()
             access_duration = response_json["expires_in"]
@@ -72,6 +75,7 @@ class Authentication:
     def get_token_headers(self):
         client_creds = f"{self.client_id}:{self.client_secret}"
         client_creds_b64 = self.base64_encode(client_creds)
+
         return {
             "Authorization": f"Basic {client_creds_b64.decode()}",
             "Content-Type": "application/x-www-form-urlencoded",

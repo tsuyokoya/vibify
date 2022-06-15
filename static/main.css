@@ -619,6 +619,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   cursor: pointer;
 }
 
+.appearance-none {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
 .flex-row {
   flex-direction: row;
 }
@@ -715,6 +721,18 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-slate-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(51 65 85 / var(--tw-bg-opacity));
+}
+
+.bg-\[url\(\'\.\.\/static\/images\/cassette\.png\'\)\] {
+  background-image: url('../static/images/cassette.png');
+}
+
+.bg-contain {
+  background-size: contain;
+}
+
+.bg-bottom {
+  background-position: bottom;
 }
 
 .p-3 {

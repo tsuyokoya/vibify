@@ -101,13 +101,27 @@
             action="{{url_for('show_home_page')}}"
             method="POST"
           >
-            {{form.hidden_tag()}} {% for field in form if
-            field.widget.input_type != 'hidden'%}
+            {{form.hidden_tag()}}
             <div>
-              {{field.label}} {{field (class="vibify-inputs text-black
-              w-full")}} {% for error in field.errors %} {{error}} {% endfor %}
+              {{form.title.label}} {{form.title(class="vibify-inputs text-black
+              w-full rounded-md")}} {% if form.title.errors %}
+              <ul class="errors">
+                {% for error in form.title.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
             </div>
-            {% endfor %}
+            <div>
+              {{form.vibe.label}} {{form.vibe(class="vibify-inputs w-full
+              rounded-md appearance-none")}} {% if form.vibe.errors %}
+              <ul class="errors">
+                {% for error in form.vibe.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
             <div>
               <button
                 class="border-2 border-white bg-lightGreen rounded-md p-3 w-full hover:scale-110 hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"

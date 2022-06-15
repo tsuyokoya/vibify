@@ -8,6 +8,7 @@ from models import db, connect_db, User, Playlist
 from forms import CreatePlaylistForm
 from spotify import spotify
 from authentication import auth
+from guest_authentication import guest_auth
 
 app = Flask(__name__)
 
@@ -25,6 +26,9 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s : %(message)s",
 )
 
+##############################################################################
+# Homepage
+
 
 @app.route("/home", methods=["GET", "POST"])
 @app.route("/", methods=["GET", "POST"])
@@ -33,7 +37,6 @@ def show_home_page():
     form = CreatePlaylistForm()
 
     if form.validate_on_submit():
-        user_id = g.user.id or "guest"
         vibe = round(form.vibe.data, 2)
         title = form.title.data
 
@@ -41,8 +44,19 @@ def show_home_page():
             title = f"my-playlist-vibe-{vibe}"
 
         session["title"] = title
+
+        # Create playlist for guest user
+        if g.user is None:
+            guest_auth.authorize()
+            spotify.create_user_playlist(vibe)
+            flash("Successfully created playlist", "success")
+            return redirect("/playlists")
+
+        # Create playlist for logged in user
+        user_id = g.user.id
         playlist = Playlist.create(title, user_id)
-        spotify.create_user_playlist(vibe, playlist.id)
+        session["playlist_id"] = playlist.id
+        spotify.create_user_playlist(vibe)
 
         flash("Successfully created playlist", "success")
         return redirect("/playlists")
@@ -51,14 +65,14 @@ def show_home_page():
 
 
 ##############################################################################
-# User login/logout/registration
+# User login/logout
 
 CURR_USER_KEY = "curr_user"
 
 
 @app.before_request
 def add_user_to_g():
-    """If we're logged in, add curr user to Flask global."""
+    """If logged in, add curr user to Flask global"""
 
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
@@ -83,6 +97,10 @@ def logout_user():
     return redirect("/")
 
 
+##############################################################################
+# User Spotify authorization
+
+
 @app.route("/authorize")
 def register_with_spotify():
     """Authorizes use of user Spotify account data"""
@@ -104,6 +122,7 @@ def callback():
     if is_authorized:
         user_data = spotify.get_user_spotify_data()
         is_registered = User.query.filter_by(email=user_data["email"]).first()
+
         if not is_registered:
             user = User.register(user_data["display_name"], user_data["email"])
             do_login(user)
@@ -111,6 +130,10 @@ def callback():
             do_login(is_registered)
         flash("Successfully logged in", "success")
         return redirect("/")
+
+
+##############################################################################
+# Playlist page
 
 
 @app.route("/playlists", methods=["GET", "POST"])

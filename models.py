@@ -110,6 +110,7 @@ class Song(db.Model):
 
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    valence = db.Column(db.Numeric(1, 2))
     preview_url = db.Column(db.String)
     artist = db.Column(db.String, nullable=False)
     album_name = db.Column(db.String)
