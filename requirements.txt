@@ -29,6 +29,7 @@ platformdirs==2.5.1
 psycopg2-binary==2.9.3
 pycparser==2.21
 python-dotenv==0.20.0
+pytz==2022.1
 requests==2.27.1
 six==1.16.0
 SQLAlchemy==1.4.35
