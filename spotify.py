@@ -86,7 +86,7 @@ class SpotifyAPI:
             if g.user:
                 if not Song.query.filter_by(id=id).first():
                     song = Song.create(id, name, artist, album_name, album_image_url)
-                Playlist_Song.create(session["playlist_id"], song.id)
+                    Playlist_Song.create(session["playlist_id"], song.id)
 
             tracks_data.append(
                 {
@@ -102,6 +102,8 @@ class SpotifyAPI:
     def filter_tracks(self, tracks_features, vibe):
         """Filter tracks based on indicated vibe plus/minus spread"""
         spread = Decimal(0.1)
+        if vibe < 0.15 or vibe > 0.85:
+            spread = Decimal(0.2)
         filtered_tracks = [
             track["id"]
             for track in tracks_features
