@@ -9,6 +9,7 @@ from forms import CreatePlaylistForm
 from spotify import spotify
 from authentication import auth
 from guest_authentication import guest_auth
+from decimal import Decimal
 
 app = Flask(__name__)
 
@@ -139,4 +140,29 @@ def callback():
 
 @app.route("/playlists", methods=["GET", "POST"])
 def show_playlists_page():
+    return render_template("playlists.html")
+
+
+@app.route("/playlists/<preset>", methods=["GET", "POST"])
+def show_set_playlists_page(preset):
+
+    if preset == "sad":
+        vibe = 0.00
+    elif preset == "neutral":
+        vibe = 0.50
+    elif preset == "happy":
+        vibe = 1.00
+
+    session["title"] = f"preset - {preset}"
+    # Create playlist for guest user
+    if g.user is None:
+        guest_auth.authorize()
+        spotify.create_user_playlist(Decimal(vibe))
+        return render_template("playlists.html")
+
+    # Create playlist for logged in user
+    user_id = g.user.id
+    playlist = Playlist.create(session["title"], user_id)
+    session["playlist_id"] = playlist.id
+    spotify.create_user_playlist(Decimal(vibe))
     return render_template("playlists.html")
