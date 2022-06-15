@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -18,9 +18,9 @@
     />
     <title>{% block title %}Vibify Home{% endblock %}</title>
   </head>
-  <body class="overflow-auto">
+  <body class="overflow-auto h-full bg-darkBlue">
     <!-- Navbar -->
-    <nav class="relative bg-black sticky top-0 text-2xl z-50">
+    <nav class="sticky bg-black top-0 text-2xl z-50 w-full">
       <!-- Flex container -->
       <div class="flex justify-between">
         <div
@@ -29,64 +29,88 @@
           <a href="{{url_for('show_home_page')}}">Vibify</a>
         </div>
         <!-- Menu items -->
-        <div class="hidden md:flex space-x-2">
+        <div class="hidden md:flex space-x-2 flex items-center mr-2">
           <a
             href="{{url_for('show_home_page')}}#description"
-            class="text-white hover:text-darkBlue p-3"
+            class="text-white hover:text-lightGreen p-3"
             >How it Works</a
           >
+          {% if session["curr_user"]%}
+          <a href="#" class="text-white hover:text-darkBlue p-3">Playlists</a>
           <a
-            href="{{url_for('show_login_page')}}"
-            class="text-white hover:text-darkBlue p-3"
-            >Log In</a
+            href="{{url_for('logout_user')}}"
+            class="text-white hover:text-lightGreen p-3"
+            >Log Out</a
           >
+          <span class="text-lightGreen p-3">Hi, {{g.user["name"]}}</span>
+          {% else %}
           <a
-            href="{{url_for('show_register_page')}}"
-            class="text-white hover:text-darkBlue p-3"
-            >Register</a
+            href="{{url_for('register_with_spotify')}}"
+            class="flex justify-center items-center text-white p-3 h-1/2 border-2 border-white rounded-md transition hover:text-lightGreen hover:border-lightGreen hover:bg-white hover:scale-110 duration-1500"
           >
+            <img
+              src="../static/images/spotify-icons-logos/icons/Spotify_Icon_RGB_Green.png"
+              alt="Spotify logo"
+              class="h-6"
+            />
+            Sign In
+          </a>
+          {% endif %}
         </div>
       </div>
     </nav>
     <!-- Main content -->
-    <main class="text-white">
-      {% block content %}
+    <main class="text-white h-full">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, msg in get_flashed_messages(with_categories =
+      true)%}
+      <p
+        class="text-center text-black {{'bg-rose-400' if category =='danger' else 'bg-lightGreen'}}"
+      >
+        {{msg}}
+      </p>
+      {% endfor %} {% endif %} {% endwith%} {% block content %}
       <!-- Generate playlist -->
-      <div class="bg-darkBlue text-center py-14">
+      <div class="bg-darkBlue text-center pb-14">
         <!-- Heading -->
-        <header>
+        <header class="my-3">
           <h1 class="font-heading text-9xl text-lightGreen pb-1">Vibify</h1>
           <h2 class="text-4xl">
-            Generate Spotify playlists based on your vibe.
+            Generate Spotify playlists based on your vibe
           </h2>
         </header>
         <!-- Create playlist -->
-        <div class="flex-col relative">
+        <div class="flex justify-evenly">
           <!-- Cassette image -->
-          <div>
+          <div class="relative">
             <img
               src="../static/images/cassette.png"
               alt="cassette tape"
-              class="mx-auto"
+              class="mx-auto my-5"
             />
+            <div class="absolute font-heading inset-x-1/4 top-24 text-3xl">
+              <p id="playlist-title" class="text-black">My Playlist Title</p>
+            </div>
+            <div class="absolute font-heading inset-x-1/4 top-36 text-5xl">
+              <p id="playlist-vibe" class="text-black">😐</p>
+            </div>
           </div>
-          <div class="absolute font-heading inset-x-1/4 top-36 text-3xl">
-            <p id="playlist-title" class="text-black">Playlist Title</p>
-          </div>
-          <div class="absolute font-heading inset-x-1/4 top-44 text-xl">
-            <p id="playlist-vibe" class="text-black">Vibe: Neutral 😐</p>
-          </div>
-          <form action="#">
+          <!-- Playlist inputs and button -->
+          <form
+            class="flex flex-col justify-evenly text-3xl"
+            action="{{url_for('show_home_page')}}"
+            method="POST"
+          >
             {{form.hidden_tag()}} {% for field in form if
             field.widget.input_type != 'hidden'%}
             <div>
-              {{field.label}} {{field (class="vibify-inputs text-black w-1/2
-              mb-6")}} {% for error in field.errors %} {{error}} {% endfor %}
+              {{field.label}} {{field (class="vibify-inputs text-black
+              w-full")}} {% for error in field.errors %} {{error}} {% endfor %}
             </div>
             {% endfor %}
             <div>
               <button
-                class="border-2 border-white bg-lightGreen rounded-md p-3 w-1/6 hover:scale-110 hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"
+                class="border-2 border-white bg-lightGreen rounded-md p-3 w-full hover:scale-110 hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"
               >
                 Generate
               </button>
@@ -102,17 +126,17 @@
           <div class="flex justify-evenly">
             <a
               href="#"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:opacity-70 transition duration-1500"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Sad</a
             >
             <a
               href="#"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:opacity-70 transition duration-1500"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Neutral</a
             >
             <a
               href="#"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:opacity-70 transition duration-1500"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Happy</a
             >
           </div>
@@ -189,7 +213,7 @@
           <a
             href="https://www.flaticon.com/free-icons/cassette"
             title="cassette icons"
-            class="hover:text-darkBlue text-sm"
+            class="hover:text-lightGreen text-sm"
             >Cassette icons created by Freepik - Flaticon</a
           >
         </div>
@@ -198,18 +222,20 @@
             href="https://www.linkedin.com/in/tsuyoshi-koyama-2018/"
             class="hover:text-darkBlue"
             target="blank"
-            >Contact</a
-          >
+            ><i class="fa-brands fa-linkedin fa-xl"></i
+          ></a>
           <a
-            href="https://github.com/tsuyokoya"
+            href="https://github.com/tsuyokoya/vibify"
             class="hover:text-darkBlue"
             target="blank"
-            >Github</a
-          >
+            ><i class="fa-brands fa-github fa-xl"></i
+          ></a>
         </div>
       </footer>
       {% endblock %}
     </main>
+    {% block scripts %}
     <script src="../static/js/homepage.js"></script>
+    {% endblock %}
   </body>
 </html>

@@ -1,15 +1,13 @@
 """Vibify application."""
 
-import base64
-import requests
-import urllib
 import logging
-from flask import Flask, render_template, redirect, request, session, g, make_response
+from flask import Flask, render_template, redirect, request, session, g, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
-from models import db, connect_db, User, Playlist, Song, Playlist_Song
-from forms import CreatePlaylistForm, LoginForm, RegistrationForm
-from spotify import SpotifyAPI
+from models import db, connect_db, User, Playlist
+from forms import CreatePlaylistForm
+from spotify import spotify
+from authentication import auth
 
 app = Flask(__name__)
 
@@ -19,7 +17,7 @@ else:
     app.config.from_object("config.DevelopmentConfig")
 
 debug = DebugToolbarExtension(app)
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, compare_type=True)
 connect_db(app)
 logging.basicConfig(
     filename="logs.log",
@@ -27,16 +25,28 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s : %(message)s",
 )
 
-token_url = "https://accounts.spotify.com/api/token"
 
-spotify = SpotifyAPI()
-
-
-@app.route("/home")
-@app.route("/")
+@app.route("/home", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def show_home_page():
-    """Renders home page"""
+    """Renders home page / Creates playlist"""
     form = CreatePlaylistForm()
+
+    if form.validate_on_submit():
+        user_id = g.user.id or "guest"
+        vibe = round(form.vibe.data, 2)
+        title = form.title.data
+
+        if not title:
+            title = f"my-playlist-vibe-{vibe}"
+
+        session["title"] = title
+        playlist = Playlist.create(title, user_id)
+        spotify.create_user_playlist(vibe, playlist.id)
+
+        flash("Successfully created playlist", "success")
+        return redirect("/playlists")
+
     return render_template("base.html", form=form)
 
 
@@ -58,63 +68,51 @@ def add_user_to_g():
 
 
 def do_login(user):
-    """Log in user."""
-
     session[CURR_USER_KEY] = user.id
 
 
 def do_logout():
-    """Logout user."""
-
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
 
-@app.route("/login")
-def show_login_page():
-    """Renders login page"""
-    form = LoginForm()
-    return render_template("login.html", form=form)
-
-
-@app.route("/register")
-def show_register_page():
-    """Renders registration page"""
-    form = RegistrationForm()
-    return render_template("register.html", form=form)
+@app.route("/logout")
+def logout_user():
+    do_logout()
+    flash("Logged out", "danger")
+    return redirect("/")
 
 
 @app.route("/authorize")
 def register_with_spotify():
     """Authorizes use of user Spotify account data"""
-    client_id = app.config["CLIENT_ID"]
-    redirect_uri = app.config["REDIRECT_URI"]
-    scope = app.config["SCOPE"]
-
-    authorize_url = spotify.authorize_user(client_id, redirect_uri, scope)
+    authorize_url = auth.get_authorization_url()
     app.logger.info(authorize_url)
     return redirect(authorize_url)
 
 
 @app.route("/callback")
 def callback():
-    print("******************", request.args)
+    """Exchanges the authorization code for an Access Token to complete spotify auth process"""
     # request.args returns a code and the state
     code = request.args.get("code")
     state = request.args.get("state")
 
     if state != session["state_key"]:
         return False
-    else:
-        redirect_uri = app.config["REDIRECT_URI"]
-        client_secret = app.config["CLIENT_SECRET"]
-        client_id = app.config["CLIENT_ID"]
-        client_creds = f"{client_id}:{client_secret}"
+    is_authorized = auth.authorize_user(code)
+    if is_authorized:
+        user_data = spotify.get_user_spotify_data()
+        is_registered = User.query.filter_by(email=user_data["email"]).first()
+        if not is_registered:
+            user = User.register(user_data["display_name"], user_data["email"])
+            do_login(user)
+        else:
+            do_login(is_registered)
+        flash("Successfully logged in", "success")
+        return redirect("/")
 
-        token_headers = spotify.get_token_headers(client_creds)
-        token_data = spotify.get_token_data(code, redirect_uri)
-        post_response = requests.post(token_url, headers=token_headers, data=token_data)
 
-        if post_response.status_code == 200:
-            json = post_response.json()
-            return redirect("/")
+@app.route("/playlists", methods=["GET", "POST"])
+def show_playlists_page():
+    return render_template("playlists.html")

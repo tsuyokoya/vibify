@@ -1,11 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import (
     StringField,
-    EmailField,
-    PasswordField,
     DecimalRangeField,
 )
-from wtforms.validators import InputRequired, Email, NumberRange, Length
+from wtforms.validators import NumberRange, Length
 
 
 class CreatePlaylistForm(FlaskForm):
@@ -13,22 +11,7 @@ class CreatePlaylistForm(FlaskForm):
 
     title = StringField(
         "Playlist Title",
-        validators=[InputRequired()],
         render_kw={"placeholder": "Enter playlist title"},
+        validators=[Length(max=20)],
     )
-    vibe = DecimalRangeField(validators=[NumberRange(min=0, max=10)])
-
-
-class LoginForm(FlaskForm):
-    """Form for user login"""
-
-    email = EmailField("Email", validators=[InputRequired(), Email()])
-    password = PasswordField("Password", validators=[InputRequired()])
-
-
-class RegistrationForm(FlaskForm):
-    """Form for user registration"""
-
-    first_name = StringField("First Name", validators=[InputRequired()])
-    email = EmailField("Email", validators=[InputRequired()])
-    password = PasswordField("Password", validators=[InputRequired(), Length(min=8)])
+    vibe = DecimalRangeField(validators=[NumberRange(min=0, max=1)])

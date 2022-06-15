@@ -10,8 +10,8 @@ class Config(object):
     SECRET_KEY = os.environ.get("SECRET_KEY", b64encode(os.urandom(64)).decode("utf-8"))
     CLIENT_ID = os.environ.get("CLIENT_ID")
     CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
-    REDIRECT_URI = "http://127.0.0.1:5000/callback"
-    SCOPE = "user-read-email user-top-read"
+    REDIRECT_URI = os.environ.get("REDIRECT_URI")
+    SCOPE = "user-read-email user-top-read user-follow-read user-library-read playlist-modify-private"
 
 
 class ProductionConfig(Config):
