@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -18,9 +18,9 @@
     />
     <title>{% block title %}Vibify Home{% endblock %}</title>
   </head>
-  <body class="overflow-auto">
+  <body class="overflow-auto h-full bg-darkBlue">
     <!-- Navbar -->
-    <nav class="relative bg-black sticky top-0 text-2xl z-50">
+    <nav class="sticky bg-black top-0 text-2xl z-50 w-full">
       <!-- Flex container -->
       <div class="flex justify-between">
         <div
@@ -42,7 +42,7 @@
             class="text-white hover:text-lightGreen p-3"
             >Log Out</a
           >
-          <span class="text-lightGreen p-3">Hi, {{g.user["first_name"]}}</span>
+          <span class="text-lightGreen p-3">Hi, {{g.user["name"]}}</span>
           {% else %}
           <a
             href="{{url_for('register_with_spotify')}}"
@@ -60,7 +60,7 @@
       </div>
     </nav>
     <!-- Main content -->
-    <main class="text-white">
+    <main class="text-white h-full">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, msg in get_flashed_messages(with_categories =
       true)%}
@@ -71,41 +71,46 @@
       </p>
       {% endfor %} {% endif %} {% endwith%} {% block content %}
       <!-- Generate playlist -->
-      <div class="bg-darkBlue text-center py-14">
+      <div class="bg-darkBlue text-center pb-14">
         <!-- Heading -->
-        <header>
+        <header class="my-3">
           <h1 class="font-heading text-9xl text-lightGreen pb-1">Vibify</h1>
           <h2 class="text-4xl">
-            Generate Spotify playlists based on your vibe.
+            Generate Spotify playlists based on your vibe
           </h2>
         </header>
         <!-- Create playlist -->
-        <div class="flex-col relative">
+        <div class="flex justify-evenly">
           <!-- Cassette image -->
-          <div>
+          <div class="relative">
             <img
-              src="../static/images/cassette.png"
+              src="../static/images/cassette-copy.png"
               alt="cassette tape"
-              class="mx-auto"
+              class="mx-auto my-5"
             />
+            <div class="absolute font-heading inset-x-1/4 top-24 text-3xl">
+              <p id="playlist-title" class="text-black">My Playlist Title</p>
+            </div>
+            <div class="absolute font-heading inset-x-1/4 top-36 text-5xl">
+              <p id="playlist-vibe" class="text-black">😐</p>
+            </div>
           </div>
-          <div class="absolute font-heading inset-x-1/4 top-36 text-3xl">
-            <p id="playlist-title" class="text-black">Playlist Title</p>
-          </div>
-          <div class="absolute font-heading inset-x-1/4 top-44 text-xl">
-            <p id="playlist-vibe" class="text-black">Vibe: Neutral 😐</p>
-          </div>
-          <form action="{{url_for('show_home_page')}}" method="POST">
+          <!-- Playlist inputs and button -->
+          <form
+            class="flex flex-col justify-evenly text-3xl"
+            action="{{url_for('show_home_page')}}"
+            method="POST"
+          >
             {{form.hidden_tag()}} {% for field in form if
             field.widget.input_type != 'hidden'%}
             <div>
-              {{field.label}} {{field (class="vibify-inputs text-black w-1/2
-              mb-6")}} {% for error in field.errors %} {{error}} {% endfor %}
+              {{field.label}} {{field (class="vibify-inputs text-black
+              w-full")}} {% for error in field.errors %} {{error}} {% endfor %}
             </div>
             {% endfor %}
             <div>
               <button
-                class="border-2 border-white bg-lightGreen rounded-md p-3 w-1/6 hover:scale-110 hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"
+                class="border-2 border-white bg-lightGreen rounded-md p-3 w-full hover:scale-110 hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"
               >
                 Generate
               </button>
@@ -121,17 +126,17 @@
           <div class="flex justify-evenly">
             <a
               href="#"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:opacity-70 transition duration-1500"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Sad</a
             >
             <a
               href="#"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:opacity-70 transition duration-1500"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Neutral</a
             >
             <a
               href="#"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:opacity-70 transition duration-1500"
+              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Happy</a
             >
           </div>
@@ -215,13 +220,13 @@
         <div class="p-3 space-x-2">
           <a
             href="https://www.linkedin.com/in/tsuyoshi-koyama-2018/"
-            class="hover:text-lightGreen"
+            class="hover:text-darkBlue"
             target="blank"
             ><i class="fa-brands fa-linkedin fa-xl"></i
           ></a>
           <a
-            href="https://github.com/tsuyokoya"
-            class="hover:text-lightGreen"
+            href="https://github.com/tsuyokoya/vibify"
+            class="hover:text-darkBlue"
             target="blank"
             ><i class="fa-brands fa-github fa-xl"></i
           ></a>
@@ -229,6 +234,8 @@
       </footer>
       {% endblock %}
     </main>
+    {% block scripts %}
     <script src="../static/js/homepage.js"></script>
+    {% endblock %}
   </body>
 </html>
