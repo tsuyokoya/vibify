@@ -2,6 +2,9 @@ const playlistTitleInput = document.querySelectorAll(".vibify-inputs")[0];
 const playlistVibeInput = document.querySelectorAll(".vibify-inputs")[1];
 const playlistTitle = document.querySelector("#playlist-title");
 const playlistVibe = document.querySelector("#playlist-vibe");
+const submitBtn = document.querySelector("#submit-btn");
+const presets = document.querySelectorAll(".preset");
+const playlistForm = document.querySelector("#playlist-form");
 
 // Update Playlist Title on cassette image based on user input
 playlistTitleInput.addEventListener("input", (e) => {
@@ -27,4 +30,25 @@ playlistVibeInput.addEventListener("input", (e) => {
   } else {
     playlistVibe.innerText = "😆";
   }
+});
+
+// Disable playlist form button after submission and add styling
+playlistForm.addEventListener("submit", () => {
+  submitBtn.disabled = "true";
+  submitBtn.textContent = "Generating...";
+  submitBtn.classList.remove(
+    "hover:scale-110",
+    "hover:bg-black",
+    "hover:border-lightGreen",
+    "hover:text-lightGreen"
+  );
+});
+
+// Disable preset anchor tag after click and add styling
+presets.forEach((preset) => {
+  preset.addEventListener("click", (e) => {
+    e.target.style.pointerEvents = "none";
+    e.target.style.backgroundColor = "#1ED760";
+    e.target.textContent = "Generating...";
+  });
 });

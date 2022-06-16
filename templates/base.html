@@ -63,7 +63,7 @@
       messages %} {% for category, msg in get_flashed_messages(with_categories =
       true)%}
       <p
-        class="text-center text-black {{'bg-rose-400' if category =='danger' else 'bg-lightGreen'}}"
+        class="text-center text-xl text-black {{'bg-rose-400' if category =='danger' else 'bg-lightGreen'}}"
       >
         {{msg}}
       </p>
@@ -87,7 +87,7 @@
               class="mx-auto my-5"
             />
             <div class="absolute font-heading inset-x-1/4 top-24 text-3xl">
-              <p id="playlist-title" class="text-black">My Playlist Title</p>
+              <p id="playlist-title" class="text-black">My playlist title</p>
             </div>
             <div class="absolute font-heading inset-x-1/4 top-36 text-5xl">
               <p id="playlist-vibe" class="text-black">😐</p>
@@ -95,9 +95,10 @@
           </div>
           <!-- Playlist inputs and button -->
           <form
-            class="flex flex-col justify-evenly text-3xl"
+            class="flex flex-col justify-evenly text-3xl w-1/2"
             action="{{url_for('show_home_page')}}"
             method="POST"
+            id="playlist-form"
           >
             {{form.hidden_tag()}}
             <div class="border-2 border-white rounded-md">
@@ -123,6 +124,7 @@
             </div>
             <div>
               <button
+                id="submit-btn"
                 class="border-2 border-white bg-lightGreen rounded-md p-3 w-full hover:scale-110 hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"
               >
                 Generate
@@ -138,18 +140,18 @@
           <!-- Playlists -->
           <div class="flex justify-evenly">
             <a
-              href="/playlists/sad"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
+              href="/playlists/preset-sad"
+              class="preset border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Sad</a
             >
             <a
-              href="/playlists/neutral"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
+              href="/playlists/preset-neutral"
+              class="preset border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Neutral</a
             >
             <a
-              href="/playlists/happy"
-              class="border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
+              href="/playlists/preset-happy"
+              class="preset border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
               >Happy</a
             >
           </div>

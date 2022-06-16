@@ -14,22 +14,33 @@ content %}
   <!-- Flex container -->
   <div class="h-full flex flex-row justify-evenly">
     <!-- Playlist -->
-    <div
-      class="h-4/5 w-2/5 flex flex-col items-center overflow-y-auto border-solid border-white border-2 rounded-md"
-    >
-      {% for track in session["playlist"]%}
+    <div class="flex flex-col h-4/5 w-2/5">
       <div
-        class="track w-full text-center bg-slate-700 cursor-pointer hover:bg-lightGreen"
+        class="flex flex-col items-center overflow-y-auto border-solid border-white border-2 rounded-md"
       >
-        <p
-          class="w-full h-full p-3"
-          data-id="{{track.id}}"
-          data-image="{{track.album_image_url}}"
+        {% for track in session["playlist"]%}
+        <div
+          class="track w-full text-center bg-slate-700 cursor-pointer hover:bg-lightGreen"
         >
-          {{track.name}} - {{track.artist}}
-        </p>
+          <p
+            class="w-full h-full p-3"
+            data-id="{{track.id}}"
+            data-image="{{track.album_image_url}}"
+          >
+            {{track.name}} - {{track.artist}}
+          </p>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+      {% if session["curr_user"] %}
+      <form action="/playlists/{{session['title']}}" method="post">
+        <button
+          class="border-2 border-white bg-lightGreen rounded-md p-3 w-full hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"
+        >
+          Add to Spotify
+        </button>
+      </form>
+      {% endif %}
     </div>
     <!-- Song Information / Player-->
     <div class="h-4/5 w-2/5 flex flex-col justify-between items-center">
