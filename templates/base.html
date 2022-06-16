@@ -10,8 +10,8 @@
       href="https://fonts.googleapis.com/css2?family=Oleo+Script&family=Raleway:wght@600&display=swap"
       rel="stylesheet"
     />
+    <link rel="shortcut icon" href="../static/images/favicon.ico" />
     <link rel="stylesheet" href="{{url_for('static',filename='main.css')}}" />
-    <!-- <link rel="stylesheet" href="../static/main.css" /> -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
@@ -27,14 +27,18 @@
           <a href="{{url_for('show_home_page')}}">Vibify</a>
         </div>
         <!-- Menu items -->
-        <div class="hidden md:flex space-x-2 flex items-center mr-2">
+        <div class="space-x-2 flex items-center mr-2">
           <a
             href="{{url_for('show_home_page')}}#description"
             class="text-white hover:text-lightGreen p-3"
             >How it Works</a
           >
           {% if session["curr_user"]%}
-          <a href="#" class="text-white hover:text-darkBlue p-3">Playlists</a>
+          <a
+            href="{{url_for('show_playlists_page')}}"
+            class="text-white hover:text-lightGreen p-3"
+            >Playlists</a
+          >
           <a
             href="{{url_for('logout_user')}}"
             class="text-white hover:text-lightGreen p-3"
@@ -58,7 +62,7 @@
       </div>
     </nav>
     <!-- Main content -->
-    <main class="text-white h-full">
+    <main class="relative text-white h-[calc(100%_-_56px)]">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, msg in get_flashed_messages(with_categories =
       true)%}
@@ -103,8 +107,7 @@
             {{form.hidden_tag()}}
             <div class="border-2 border-white rounded-md">
               {{form.title.label}} {{form.title(class="vibify-inputs text-black
-              w-full rounded-md text-sm text-slate-500 p-3")}} {% if
-              form.title.errors %}
+              w-full text-xl text-slate-500 p-3")}} {% if form.title.errors %}
               <ul class="errors">
                 {% for error in form.title.errors %}
                 <li>{{ error }}</li>
@@ -114,7 +117,7 @@
             </div>
             <div class="border-2 border-white rounded-md">
               {{form.vibe.label}} {{form.vibe(class="vibify-inputs w-full
-              rounded-md appearance-none p-2")}} {% if form.vibe.errors %}
+              appearance-none p-1")}} {% if form.vibe.errors %}
               <ul class="errors">
                 {% for error in form.vibe.errors %}
                 <li>{{ error }}</li>
@@ -125,7 +128,7 @@
             <div>
               <button
                 id="submit-btn"
-                class="border-2 border-white bg-lightGreen rounded-md p-3 w-full hover:scale-110 hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"
+                class="border-2 text-lightGreen border-lightGreen bg-black rounded-md p-3 w-full hover:scale-110 hover:bg-lightGreen hover:border-white hover:text-white transition duration-1500"
               >
                 Generate
               </button>
@@ -215,9 +218,8 @@
           <div class="w-1/3 p-3 text-2xl">
             <p>
               An account is <u>not</u> required for generating a playlist.
-              <br /><br />Why even sign up, you ask? Registered users will be
-              able to connect to their Spotify accounts and save their playlists
-              directly to Spotify.
+              <br /><br />Why even sign up, you ask? Registered users can save
+              their playlists directly to their Spotify accounts!
             </p>
           </div>
         </div>

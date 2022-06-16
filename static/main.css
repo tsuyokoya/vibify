@@ -536,8 +536,20 @@ Ensure the default browser behavior of the `hidden` attribute.
   top: 9rem;
 }
 
+.bottom-0 {
+  bottom: 0px;
+}
+
 .z-50 {
   z-index: 50;
+}
+
+.m-2 {
+  margin: 0.5rem;
+}
+
+.m-7 {
+  margin: 1.75rem;
 }
 
 .my-3 {
@@ -587,8 +599,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 1.5rem;
 }
 
+.h-\[calc\(100\%_-_56px\)\] {
+  height: calc(100% - 56px);
+}
+
 .h-4\/5 {
   height: 80%;
+}
+
+.h-80 {
+  height: 20rem;
 }
 
 .w-full {
@@ -615,6 +635,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 40%;
 }
 
+.w-96 {
+  width: 24rem;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -631,6 +655,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .flex-col {
   flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .items-center {
@@ -688,6 +716,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
+.border-lightGreen {
+  --tw-border-opacity: 1;
+  border-color: rgb(30 215 96 / var(--tw-border-opacity));
+}
+
 .bg-darkBlue {
   --tw-bg-opacity: 1;
   background-color: rgb(41 65 171 / var(--tw-bg-opacity));
@@ -727,8 +760,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.75rem;
 }
 
-.p-2 {
-  padding: 0.5rem;
+.p-1 {
+  padding: 0.25rem;
 }
 
 .p-10 {
@@ -863,19 +896,24 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-color: rgb(30 215 96 / var(--tw-border-opacity));
 }
 
+.hover\:border-white:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+}
+
 .hover\:bg-white:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-black:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
-}
-
 .hover\:bg-lightGreen:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(30 215 96 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-black:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .hover\:text-white:hover {
@@ -891,10 +929,4 @@ Ensure the default browser behavior of the `hidden` attribute.
 .hover\:text-darkBlue:hover {
   --tw-text-opacity: 1;
   color: rgb(41 65 171 / var(--tw-text-opacity));
-}
-
-@media (min-width: 768px) {
-  .md\:flex {
-    display: flex;
-  }
 }

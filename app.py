@@ -4,7 +4,7 @@ import logging
 from flask import Flask, render_template, redirect, request, session, g, flash, Markup
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
-from models import Playlist_Song, db, connect_db, User, Playlist, Song
+from models import db, connect_db, User, Playlist
 from forms import CreatePlaylistForm
 from spotify import spotify
 from authentication import auth
@@ -52,7 +52,6 @@ def show_home_page():
         if g.user is None:
             guest_auth.authorize()
             spotify.create_user_playlist(vibe)
-            flash("Successfully created playlist", "success")
             return redirect(f"/playlists/{title}")
 
         # Create playlist for logged in user
@@ -61,7 +60,6 @@ def show_home_page():
         session["playlist_id"] = playlist.id
         spotify.create_user_playlist(vibe)
 
-        flash("Successfully created playlist", "success")
         return redirect(f"/playlists/{title}")
 
     return render_template("base.html", form=form)
@@ -140,11 +138,32 @@ def callback():
 # Playlist page
 
 
+@app.route("/playlists", methods=["GET"])
+def show_playlists_page():
+    user_id = g.user.spotify_id
+    playlists = spotify.get_user_playlists(user_id)
+
+    if playlists:
+        playlists_data = playlists[0]
+        playlists_url = playlists[1]
+        return render_template(
+            "playlists.html", playlists_data=playlists_data, playlists_url=playlists_url
+        )
+    return render_template("playlists.html")
+
+
+@app.route("/playlists", methods=["POST"])
+def delete_playlist():
+    playlist_id = request.form.get("playlist_to_delete")
+    spotify.unfollow_playlist(playlist_id)
+    flash("Deleted playlist", "danger")
+    return redirect("/playlists")
+
+
 @app.route("/playlists/<title>", methods=["GET", "POST"])
-def show_playlists_page(title):
-    if request.method == "POST":
-        user = User.query.filter_by(id=g.user.id).first()
-        user_id = user.spotify_id
+def show_generated_playlist(title):
+    if request.method == "POST" and g.user is not None:
+        user_id = g.user.spotify_id
         playlist_info = spotify.create_empty_spotify_playlist(user_id)
         playlist_id = playlist_info["id"]
         playlist_url = playlist_info["external_urls"]["spotify"]
@@ -159,7 +178,7 @@ def show_playlists_page(title):
             "success",
         )
 
-        return redirect("/")
+        return redirect("/playlists")
     vibe = 0.00
 
     if title == "preset-neutral":
@@ -172,7 +191,7 @@ def show_playlists_page(title):
     if g.user is None:
         guest_auth.authorize()
         spotify.create_user_playlist(Decimal(vibe))
-        return render_template("playlists.html")
+        return render_template("playlist.html")
 
     # Create preset playlist for logged in user
     user_id = g.user.id
@@ -180,4 +199,4 @@ def show_playlists_page(title):
     session["playlist_id"] = playlist.id
     spotify.create_user_playlist(Decimal(vibe))
 
-    return render_template("playlists.html")
+    return render_template("playlist.html")
