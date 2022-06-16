@@ -2,17 +2,14 @@
 content %}
 <!-- User Playlists Page -->
 
-<!-- Spotify Profile link -->
-
 <!-- Flex container -->
-
-<!-- User Playlist(s) -->
 <div class="relative h-full flex flex-col items-center">
   <h2
     class="text-6xl text-center text-lightGreen text-decoration-line: underline font-heading py-3 mb-2"
   >
     {{g.user["name"]}}'s Playlists
   </h2>
+  <!-- Spotify Profile link -->
   <div
     class="flex flex-col w-1/5 m-2 border-2 border-white bg-deepPurple rounded-md hover:scale-110 hover:bg-white hover:border-lightGreen hover:text-lightGreen transition duration-1500"
   >
@@ -20,6 +17,7 @@ content %}
       <h3 class="text-center text-xl">My Spotify Profile</h3>
     </a>
   </div>
+  <!-- List of Spotify playlists -->
   <div class="flex flex-wrap justify-evenly">
     {% if playlists_data %} {% for playlist in playlists_data %}
     <div
@@ -48,7 +46,7 @@ content %}
       </form>
     </div>
     {% endfor %} {% else %}
-    <h2>Looks like you don't have any Spotify playlists!</h2>
+    <h2>Looks like your Spotify account doesn't have any playlists!</h2>
     {% endif %}
   </div>
 </div>
