@@ -173,5 +173,42 @@ class SpotifyAPI:
         response = requests.post(endpoint, headers=headers).json()
         return response
 
+    def get_user_playlists(self, user_id):
+        playlists = []
+        headers = auth.get_api_access_headers()
+        endpoint = self.ENDPOINT_BASE_URL + f"/users/{user_id}/playlists"
+
+        response = requests.get(endpoint, headers=headers).json()
+
+        if response["total"] > 0:
+            for item in response["items"]:
+                id = item["id"]
+                name = item["name"]
+                url = item["external_urls"]["spotify"]
+                image = "https://media.istockphoto.com/vectors/music-note-icon-vector-illustration-vector-id1175435360?k=20&m=1175435360&s=612x612&w=0&h=1yoTgUwobvdFlNxUQtB7_NnWOUD83XOMZHvxUzkOJJs="
+
+                if len(item["images"]) == 3:
+                    image = item["images"][1]["url"]
+
+                playlists.append(
+                    {
+                        "id": id,
+                        "name": name,
+                        "url": url,
+                        "image": image,
+                    }
+                )
+            playlist_url = response["items"][0]["owner"]["external_urls"]["spotify"]
+            return playlists, playlist_url
+
+        return None
+
+    def unfollow_playlist(self, playlist_id):
+        headers = auth.get_api_access_headers()
+        endpoint = self.ENDPOINT_BASE_URL + f"/playlists/{playlist_id}/followers"
+
+        requests.delete(endpoint, headers=headers)
+        return True
+
 
 spotify = SpotifyAPI()
