@@ -1,3 +1,5 @@
+const playlistBtn = document.querySelector("#add-playlist-btn");
+
 const removeActiveSelection = (tracks) => {
   for (track of tracks) {
     if (track.classList.contains("bg-lightGreen")) {
@@ -33,3 +35,15 @@ window.onload = () => {
     });
   });
 };
+
+// Disable submit button after click and add styling
+playlistBtn.addEventListener("click", () => {
+  playlistBtn.disabled = "true";
+  playlistBtn.textContent = "Adding to your Spotify account...";
+  playlistBtn.classList.remove(
+    "hover:scale-110",
+    "hover:bg-black",
+    "hover:border-lightGreen",
+    "hover:text-lightGreen"
+  );
+});
