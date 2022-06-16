@@ -32,16 +32,33 @@ playlistVibeInput.addEventListener("input", (e) => {
   }
 });
 
+const loadMessages = [
+  "Finding the best songs...",
+  "Hold on tight...",
+  "Vibing with Spotify...",
+  "Getting there...",
+];
+
+// Select a random loading message
+const setLoadMessage = (loadMessages) => {
+  const randomIdx = Math.floor(Math.random() * loadMessages.length);
+  const msg = loadMessages[randomIdx];
+  submitBtn.textContent = msg;
+};
+
 // Disable playlist form button after submission and add styling
 playlistForm.addEventListener("submit", () => {
   submitBtn.disabled = "true";
-  submitBtn.textContent = "Generating...";
+
   submitBtn.classList.remove(
     "hover:scale-110",
-    "hover:bg-black",
-    "hover:border-lightGreen",
-    "hover:text-lightGreen"
+    "hover:bg-lightGreen",
+    "hover:border-white",
+    "hover:text-white"
   );
+  // Add loading message
+  submitBtn.textContent = "Generating...";
+  setInterval(() => setLoadMessage(loadMessages), 4000);
 });
 
 // Disable preset anchor tag after click and add styling
