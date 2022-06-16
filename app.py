@@ -1,10 +1,10 @@
 """Vibify application."""
 
 import logging
-from flask import Flask, render_template, redirect, request, session, g, flash
+from flask import Flask, render_template, redirect, request, session, g, flash, Markup
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
-from models import db, connect_db, User, Playlist
+from models import Playlist_Song, db, connect_db, User, Playlist, Song
 from forms import CreatePlaylistForm
 from spotify import spotify
 from authentication import auth
@@ -17,6 +17,8 @@ if app.config["ENV"] == "production":
     app.config.from_object("config.ProductionConfig")
 else:
     app.config.from_object("config.DevelopmentConfig")
+
+CURR_USER_KEY = "curr_user"
 
 debug = DebugToolbarExtension(app)
 migrate = Migrate(app, db, compare_type=True)
@@ -51,7 +53,7 @@ def show_home_page():
             guest_auth.authorize()
             spotify.create_user_playlist(vibe)
             flash("Successfully created playlist", "success")
-            return redirect("/playlists")
+            return redirect(f"/playlists/{title}")
 
         # Create playlist for logged in user
         user_id = g.user.id
@@ -60,15 +62,13 @@ def show_home_page():
         spotify.create_user_playlist(vibe)
 
         flash("Successfully created playlist", "success")
-        return redirect("/playlists")
+        return redirect(f"/playlists/{title}")
 
     return render_template("base.html", form=form)
 
 
 ##############################################################################
 # User login/logout
-
-CURR_USER_KEY = "curr_user"
 
 
 @app.before_request
@@ -126,7 +126,9 @@ def callback():
         is_registered = User.query.filter_by(email=user_data["email"]).first()
 
         if not is_registered:
-            user = User.register(user_data["display_name"], user_data["email"])
+            user = User.register(
+                user_data["id"], user_data["display_name"], user_data["email"]
+            )
             do_login(user)
         else:
             do_login(is_registered)
@@ -138,31 +140,44 @@ def callback():
 # Playlist page
 
 
-@app.route("/playlists", methods=["GET", "POST"])
-def show_playlists_page():
-    return render_template("playlists.html")
+@app.route("/playlists/<title>", methods=["GET", "POST"])
+def show_playlists_page(title):
+    if request.method == "POST":
+        user = User.query.filter_by(id=g.user.id).first()
+        user_id = user.spotify_id
+        playlist_info = spotify.create_empty_spotify_playlist(user_id)
+        playlist_id = playlist_info["id"]
+        playlist_url = playlist_info["external_urls"]["spotify"]
 
+        uris = [track["uri"] for track in session["playlist"]]
 
-@app.route("/playlists/<preset>", methods=["GET", "POST"])
-def show_set_playlists_page(preset):
+        spotify.populate_playlist(playlist_id, uris)
+        flash(
+            Markup(
+                f"Successfully added playlist <a href='{playlist_url}' target='_blank' class='text-deepPurple underline'>HERE</a>"
+            ),
+            "success",
+        )
 
-    if preset == "sad":
-        vibe = 0.00
-    elif preset == "neutral":
+        return redirect("/")
+    vibe = 0.00
+
+    if title == "preset-neutral":
         vibe = 0.50
-    elif preset == "happy":
+    elif title == "preset-happy":
         vibe = 1.00
 
-    session["title"] = f"preset - {preset}"
-    # Create playlist for guest user
+    session["title"] = f"{title}"
+    # Create preset playlist for guest user
     if g.user is None:
         guest_auth.authorize()
         spotify.create_user_playlist(Decimal(vibe))
         return render_template("playlists.html")
 
-    # Create playlist for logged in user
+    # Create preset playlist for logged in user
     user_id = g.user.id
     playlist = Playlist.create(session["title"], user_id)
     session["playlist_id"] = playlist.id
     spotify.create_user_playlist(Decimal(vibe))
+
     return render_template("playlists.html")
