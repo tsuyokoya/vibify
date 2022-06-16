@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 from flask import session, g
 from decimal import Decimal
 from random import shuffle
-from models import Song, Playlist_Song
+from models import db, Song, Playlist_Song
 
 from authentication import auth
 
@@ -65,6 +65,11 @@ class SpotifyAPI:
                         "valence": track["valence"],
                     }
                 )
+                song = Song.query.filter_by(id=track["id"]).first()
+                if song:
+                    song.valence = track["valence"]
+                    db.session.add(song)
+                    db.session.commit()
 
         return audio_features
 
@@ -76,22 +81,27 @@ class SpotifyAPI:
         endpoint = self.ENDPOINT_BASE_URL + f"/tracks?{urlencode(query)}"
 
         tracks_data_list = requests.get(endpoint, headers=headers).json()
+
         for track in tracks_data_list["tracks"]:
             id = track["id"]
             name = track["name"]
+            uri = track["uri"]
             artist = track["artists"][0]["name"]
             album_name = track["album"]["name"]
             album_image_url = track["album"]["images"][0]["url"]
 
             if g.user:
                 if not Song.query.filter_by(id=id).first():
-                    song = Song.create(id, name, artist, album_name, album_image_url)
+                    song = Song.create(
+                        id, name, uri, artist, album_name, album_image_url
+                    )
                     Playlist_Song.create(session["playlist_id"], song.id)
 
             tracks_data.append(
                 {
                     "id": id,
                     "name": name,
+                    "uri": uri,
                     "artist": artist,
                     "album_name": album_name,
                     "album_image_url": album_image_url,
@@ -142,6 +152,26 @@ class SpotifyAPI:
                     tracks.append(track["id"])
         shuffle(tracks)
         return tracks
+
+    def create_empty_spotify_playlist(self, user_id):
+        headers = auth.get_api_access_headers()
+        endpoint = self.ENDPOINT_BASE_URL + f"/users/{user_id}/playlists"
+        data = {"name": session["title"], "public": False}
+
+        response = requests.post(endpoint, headers=headers, json=data).json()
+        return response
+
+    def populate_playlist(self, playlist_id, uris):
+        headers = auth.get_api_access_headers()
+        string_uris = ",".join(uris)
+        query = {"uris": string_uris}
+        endpoint = (
+            self.ENDPOINT_BASE_URL
+            + f"/playlists/{playlist_id}/tracks?{urlencode(query)}"
+        )
+
+        response = requests.post(endpoint, headers=headers).json()
+        return response
 
 
 spotify = SpotifyAPI()
