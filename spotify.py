@@ -54,7 +54,9 @@ class SpotifyAPI:
             endpoint = self.ENDPOINT_BASE_URL + f"/audio-features?{urlencode(query)}"
 
             features_data = requests.get(endpoint, headers=headers).json()
-            features_list = features_data["audio_features"]
+            features_list = [
+                track for track in features_data["audio_features"] if track is not None
+            ]
 
             for track in features_list:
                 audio_features.append(
