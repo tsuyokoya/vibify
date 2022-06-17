@@ -36,7 +36,11 @@ content %}
           {% endfor %}
         </div>
         {% if session["curr_user"] %}
-        <form action="/playlists/{{session['title']}}" method="post">
+        <form
+          id="add-playlist-form"
+          action="/playlists/{{session['title']}}"
+          method="post"
+        >
           <button
             id="add-playlist-btn"
             class="border-2 border-white bg-deepPurple rounded-md p-3 w-full hover:bg-black hover:border-lightGreen hover:text-lightGreen transition duration-1500"
