@@ -16,8 +16,6 @@ Vibify is an app that allows music listeners to generate a Spotify playlist of s
   - Flask
   - SQLAlchemy
   - PostgreSQL
-  - Axios
-  - Bcrypt
 
 ## Main Features
 
