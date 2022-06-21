@@ -1,9 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
-bcrypt = Bcrypt()
 db = SQLAlchemy()
 
 
@@ -15,10 +13,10 @@ def connect_db(app):
 """Models for Vibify."""
 
 # - users
-#   - id: TEXT, PK (uuid)
-#   - first_name: VARCHAR(25)
-#   - email: VARCHAR(50), unique
-#   - password: TEXT (hashed)
+#   - id: UUID, PK
+#   - spotify_id: String
+#   - name: String
+#   - email: String
 
 # User model
 class User(db.Model):
@@ -33,7 +31,7 @@ class User(db.Model):
 
     @classmethod
     def register(cls, spotify_id, name, email):
-        """Register user. Password is hashed. Adds user to system."""
+        """Registers user and adds user to database."""
 
         user = User(
             spotify_id=spotify_id,
@@ -50,25 +48,11 @@ class User(db.Model):
         backref="user",
     )
 
-    @classmethod
-    def authenticate(cls, email, password):
-        """Authenticate user login information"""
-
-        user = cls.query.filter_by(email=email).first()
-
-        if user:
-            is_auth = bcrypt.check_password_hash(user.password, password)
-            if is_auth:
-                return user
-
-        return False
-
 
 # - playlists
-#   - id: TEXT, PK (uuid)
-#   - name: VARCHAR(25)
-#   - description: VARCHAR(100)
-#   - user_id: TEXT, FK
+#   - id: UUID, PK
+#   - name: VARCHAR(50)
+#   - user_id: UUID, FK
 
 # Playlist model
 class Playlist(db.Model):
@@ -97,12 +81,13 @@ class Playlist(db.Model):
 
 
 # - songs
-#   - id: TEXT, PK (uuid)
-#   - title: VARCHAR(50)
-#   - artist: VARCHAR(50)
-#   - album: VARCHAR(50)
-#   - artwork: TEXT
-#   - preview_url: TEXT
+#   - id: String, PK
+#   - name: String
+#   - valence: Decimal
+#   - uri: String
+#   - artist: String
+#   - album_name: String
+#   - album_image_url: String
 
 # Song model
 class Song(db.Model):
@@ -134,8 +119,8 @@ class Song(db.Model):
 
 
 # - playlists_songs
-#   - playlist_id: TEXT, FK
-#   - song_id: TEXT, FK
+#   - playlist_id: UUID, FK
+#   - song_id: String, FK
 
 # Playlist_Song model
 class Playlist_Song(db.Model):
