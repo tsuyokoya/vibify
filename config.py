@@ -30,3 +30,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_DATABASE_URI = "postgresql:///vibify-test"
+    DEBUG_TB_HOSTS = ["dont-show-debug-toolbar"]
+    WTF_CSRF_ENABLED = False
