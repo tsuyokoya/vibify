@@ -23,7 +23,7 @@ The main source of the data will be provided by the [Spotify API](https://develo
 
 ## Database Schema:
 
-<img src='./vibify-schema.png' alt='schema screenshot' height='350' width='800'>
+<img src='./vibify-images/vibify-schema.png' alt='schema screenshot' height='350' width='800'>
 
 - users
   - id: TEXT, PK (uuid)
