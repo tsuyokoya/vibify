@@ -8,6 +8,7 @@ from models import db, connect_db, User, Song
 from forms import CreatePlaylistForm
 from spotify import spotify
 from datetime import datetime
+from random import shuffle
 from authentication import auth
 from guest_authentication import guest_auth
 
@@ -188,12 +189,9 @@ def show_generated_playlist(title):
     session["title"] = f"{title}"
     # Create preset playlist for guest user (generate playlist from songs in database)
     if g.user is None:
-        songs = (
-            Song.query.filter(Song.valence.between(vibe - 0.15, vibe + 0.15))
-            .limit(15)
-            .all()
-        )
-        return render_template("guest-preset-playlist.html", songs=songs)
+        songs = Song.query.filter(Song.valence.between(vibe - 0.15, vibe + 0.15)).all()
+        shuffle(songs)
+        return render_template("guest-preset-playlist.html", songs=songs[:15])
 
     # Create preset playlist for logged in user
     user_id = g.user.id
