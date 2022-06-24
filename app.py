@@ -7,6 +7,7 @@ from flask_migrate import Migrate
 from models import db, connect_db, User, Playlist
 from forms import CreatePlaylistForm
 from spotify import spotify
+from datetime import datetime
 from authentication import auth
 from guest_authentication import guest_auth
 from decimal import Decimal
@@ -46,7 +47,7 @@ def show_home_page():
         title = form.title.data
 
         if not title:
-            title = f"my-playlist-vibe-{vibe}"
+            title = f"my-playlist-{datetime.now().date()}"
 
         session["title"] = title
 
