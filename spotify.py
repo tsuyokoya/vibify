@@ -1,7 +1,6 @@
 import requests
 from urllib.parse import urlencode
 from flask import session, g
-from decimal import Decimal
 from random import shuffle
 from models import db, Song, Playlist_Song
 
@@ -32,7 +31,7 @@ class SpotifyAPI:
         # Get audio features for each track
         tracks_features = self.get_tracks_audio_features(headers, grouped_track_ids)
         # Filter tracks based on vibe input
-        playlist_tracks = self.filter_tracks(tracks_features, vibe)[:20]
+        playlist_tracks = self.filter_tracks(tracks_features, float(vibe))[:20]
         # Get track data for each playlist track
         playlist_tracks_data = self.get_tracks_data(headers, playlist_tracks)
 
@@ -62,8 +61,6 @@ class SpotifyAPI:
                 audio_features.append(
                     {
                         "id": track["id"],
-                        "danceability": track["danceability"],
-                        "energy": track["energy"],
                         "valence": track["valence"],
                     }
                 )
@@ -72,7 +69,7 @@ class SpotifyAPI:
                     song.valence = track["valence"]
                     db.session.add(song)
                     db.session.commit()
-
+        shuffle(audio_features)
         return audio_features
 
     def get_tracks_data(self, headers, ids):
@@ -113,14 +110,17 @@ class SpotifyAPI:
 
     def filter_tracks(self, tracks_features, vibe):
         """Filter tracks based on indicated vibe plus/minus spread"""
-        spread = Decimal(0.1)
-        if vibe < 0.15 or vibe > 0.85:
-            spread = Decimal(0.2)
+        spread = 0.13
+
+        if vibe < 0.10 or vibe > 0.90:
+            spread = 0.20
+
         filtered_tracks = [
             track["id"]
             for track in tracks_features
             if vibe - spread <= track["valence"] <= vibe + spread
         ]
+        shuffle(filtered_tracks)
         return filtered_tracks
 
     def get_new_albums(self, headers):
@@ -187,7 +187,7 @@ class SpotifyAPI:
                 id = item["id"]
                 name = item["name"]
                 url = item["external_urls"]["spotify"]
-                image = "https://media.istockphoto.com/vectors/music-note-icon-vector-illustration-vector-id1175435360?k=20&m=1175435360&s=612x612&w=0&h=1yoTgUwobvdFlNxUQtB7_NnWOUD83XOMZHvxUzkOJJs="
+                image = "./static/images/playlist-placeholder.jpg"
 
                 if len(item["images"]) == 3:
                     image = item["images"][1]["url"]
