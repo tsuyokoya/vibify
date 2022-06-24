@@ -4,12 +4,12 @@ import logging
 from flask import Flask, render_template, redirect, request, session, g, flash, Markup
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
-from models import db, connect_db, User, Playlist
+from models import db, connect_db, User, Song
 from forms import CreatePlaylistForm
 from spotify import spotify
+from datetime import datetime
 from authentication import auth
 from guest_authentication import guest_auth
-from decimal import Decimal
 
 app = Flask(__name__)
 
@@ -46,7 +46,7 @@ def show_home_page():
         title = form.title.data
 
         if not title:
-            title = f"my-playlist-vibe-{vibe}"
+            title = f"my-playlist-{datetime.now().date()}"
 
         session["title"] = title
 
@@ -57,9 +57,6 @@ def show_home_page():
             return redirect(f"/playlists/{title}")
 
         # Create playlist for logged in user
-        user_id = g.user.id
-        playlist = Playlist.create(title, user_id)
-        session["playlist_id"] = playlist.id
         spotify.create_user_playlist(vibe)
 
         return redirect(f"/playlists/{title}")
@@ -137,7 +134,7 @@ def callback():
 
 
 ##############################################################################
-# Playlist page
+# Playlist pages
 
 
 @app.route("/playlists", methods=["GET"])
@@ -181,24 +178,25 @@ def show_generated_playlist(title):
         )
 
         return redirect("/playlists")
-    vibe = 0.00
 
+    vibe = 0.10
     if title == "preset-neutral":
         vibe = 0.50
     elif title == "preset-happy":
         vibe = 1.00
 
     session["title"] = f"{title}"
-    # Create preset playlist for guest user
+    # Create preset playlist for guest user (generate playlist from songs in database)
     if g.user is None:
-        guest_auth.authorize()
-        spotify.create_user_playlist(Decimal(vibe))
-        return render_template("playlist.html")
+        songs = (
+            Song.query.filter(Song.valence.between(vibe - 0.15, vibe + 0.15))
+            .limit(15)
+            .all()
+        )
+        return render_template("guest-preset-playlist.html", songs=songs)
 
     # Create preset playlist for logged in user
     user_id = g.user.id
-    playlist = Playlist.create(session["title"], user_id)
-    session["playlist_id"] = playlist.id
-    spotify.create_user_playlist(Decimal(vibe))
+    spotify.create_user_playlist(vibe)
 
     return render_template("playlist.html")
