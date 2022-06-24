@@ -2,7 +2,7 @@ import requests
 from urllib.parse import urlencode
 from flask import session, g
 from random import shuffle
-from models import db, Song, Playlist_Song
+from models import db, Song
 
 from authentication import auth
 
@@ -91,10 +91,7 @@ class SpotifyAPI:
 
             if g.user:
                 if not Song.query.filter_by(id=id).first():
-                    song = Song.create(
-                        id, name, uri, artist, album_name, album_image_url
-                    )
-                    Playlist_Song.create(session["playlist_id"], song.id)
+                    Song.create(id, name, uri, artist, album_name, album_image_url)
 
             tracks_data.append(
                 {
