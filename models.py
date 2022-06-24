@@ -43,11 +43,6 @@ class User(db.Model):
         db.session.commit()
         return user
 
-    playlists = db.relationship(
-        "Playlist",
-        backref="user",
-    )
-
 
 # - songs
 #   - id: String, PK
