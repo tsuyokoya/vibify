@@ -43,42 +43,6 @@ class User(db.Model):
         db.session.commit()
         return user
 
-    playlists = db.relationship(
-        "Playlist",
-        backref="user",
-    )
-
-
-# - playlists
-#   - id: UUID, PK
-#   - name: VARCHAR(50)
-#   - user_id: UUID, FK
-
-# Playlist model
-class Playlist(db.Model):
-    """Creates playlist model"""
-
-    __tablename__ = "playlists"
-
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = db.Column(db.String(50), nullable=False)
-    user_id = db.Column(
-        UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="cascade")
-    )
-
-    songs = db.relationship(
-        "Song",
-        secondary="playlists_songs",
-        backref="playlists",
-    )
-
-    @classmethod
-    def create(cls, name, user_id):
-        playlist = Playlist(name=name, user_id=user_id)
-        db.session.add(playlist)
-        db.session.commit()
-        return playlist
-
 
 # - songs
 #   - id: String, PK
@@ -116,33 +80,3 @@ class Song(db.Model):
         db.session.add(song)
         db.session.commit()
         return song
-
-
-# - playlists_songs
-#   - playlist_id: UUID, FK
-#   - song_id: String, FK
-
-# Playlist_Song model
-class Playlist_Song(db.Model):
-    """Connection of a playlist <-> song."""
-
-    __tablename__ = "playlists_songs"
-
-    playlist_id = db.Column(
-        UUID(as_uuid=True),
-        db.ForeignKey("playlists.id", ondelete="cascade"),
-        primary_key=True,
-    )
-
-    song_id = db.Column(
-        db.String,
-        db.ForeignKey("songs.id", ondelete="cascade"),
-        primary_key=True,
-    )
-
-    @classmethod
-    def create(cls, playlist_id, song_id):
-        playlist_song = Playlist_Song(playlist_id=playlist_id, song_id=song_id)
-        db.session.add(playlist_song)
-        db.session.commit()
-        return playlist_song

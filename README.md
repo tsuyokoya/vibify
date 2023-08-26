@@ -4,9 +4,9 @@
 
 ## Project Description
 
-Vibify is a full-stack application that allows users to generate a Spotify playlist of songs based on an indicated mood.
+Vibify is a full-stack application that allows users to generate a Spotify playlist of songs based on an indicated mood. The name is a combination of "vibe" and "Spotify"!
 
-Live link: <a href="https://tk-vibify.herokuapp.com/" target="_blank">Spotify Web API</a>
+Live link: <a href="https://tk-vibify.herokuapp.com/" target="_blank">https://tk-vibify.herokuapp.com/</a>
 
 ### Technologies Used
 
