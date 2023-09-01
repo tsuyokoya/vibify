@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Playlists{% endblock %}
+
+{% block content %}
+  <!-- User Playlists Page -->
+
+  <!-- Flex container -->
+  <div class="relative h-full flex flex-col items-center">
+    <h2
+      class="text-6xl text-center text-lightGreen text-decoration-line: underline font-heading py-3 mb-2"
+    >
+      {{g.user["name"]}}'s Playlists
+    </h2>
+    <!-- Spotify Profile link -->
+    <div
+      class="flex flex-col w-1/5 m-2 border-2 border-white bg-deepPurple rounded-md hover:scale-110 hover:bg-white hover:border-lightGreen hover:text-lightGreen transition duration-1500"
+    >
+      <a href="{{playlists_url}}" target="_blank" class="p-3">
+        <h3 class="text-center text-xl">My Spotify Profile</h3>
+      </a>
+    </div>
+    <!-- List of Spotify playlists -->
+    <div class="flex flex-wrap justify-evenly">
+
+      {% if playlists_data %}
+        {% for playlist in playlists_data %}
+          <div
+            class="flex flex-col w-96 m-7 border-2 border-white rounded-md hover:scale-110 hover:border-lightGreen hover:bg-black hover:text-lightGreen transition duration-1500"
+          >
+            <a href="{{playlist.url}}" target="_blank" class="p-3">
+              <h3 class="text-center text-xl">{{playlist.name}}</h3>
+              <img
+                src="{{playlist.image}}"
+                class="h-80 w-full"
+                alt="playlist image"
+              />
+            </a>
+
+            <form
+              action="{{url_for('playlist.delete_playlist')}}"
+              method="POST"
+              class="cursor-pointer text-center bg-deepPurple rounded-md w-full hover:bg-white hover:border-lightGreen hover:text-lightGreen transition duration-1500"
+            >
+              <input
+                type="hidden"
+                value="{{ playlist.id }}"
+                name="playlist_to_delete"
+              />
+              <button class="w-full h-full p-3">Delete</button>
+            </form>
+          </div>
+        {% endfor %}
+      {% else %}
+        <h2>Looks like your Spotify account doesn't have any playlists!</h2>
+      {% endif %}
+
+    </div>
+  </div>
+
+{% endblock %}

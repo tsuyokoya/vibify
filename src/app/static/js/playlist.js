@@ -1,5 +1,4 @@
 const playlistBtn = document.querySelector("#add-playlist-btn");
-const playlistForm = document.querySelector("#add-playlist-form");
 
 const removeActiveSelection = (tracks) => {
   for (track of tracks) {
@@ -38,13 +37,17 @@ window.onload = () => {
 };
 
 // Disable submit button after click and add styling
-playlistForm.addEventListener("submit", () => {
-  playlistBtn.disabled = "true";
-  playlistBtn.textContent = "Adding to your Spotify account...";
-  playlistBtn.classList.remove(
-    "hover:scale-110",
-    "hover:bg-black",
-    "hover:border-lightGreen",
-    "hover:text-lightGreen"
-  );
-});
+if (document.querySelector("#add-playlist-form")) {
+  const playlistForm = document.querySelector("#add-playlist-form");
+
+  playlistForm.addEventListener("submit", () => {
+    playlistBtn.disabled = "true";
+    playlistBtn.textContent = "Adding to your Spotify account...";
+    playlistBtn.classList.remove(
+      "hover:scale-110",
+      "hover:bg-black",
+      "hover:border-lightGreen",
+      "hover:text-lightGreen"
+    );
+  });
+}
