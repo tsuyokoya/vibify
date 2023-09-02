@@ -7,6 +7,7 @@ from urllib.parse import urlencode
 from app.extensions import db
 from app.models import Song
 from .authentication import auth
+from .guest_authentication import guest_auth
 
 
 class SpotifyAPI:
@@ -22,7 +23,10 @@ class SpotifyAPI:
 
     def create_user_playlist(self, vibe):
         """Creates playlist based on indicated vibe"""
-        headers = auth.get_api_access_headers()
+        if g.user:
+            headers = auth.get_api_access_headers()
+        else:
+            headers = guest_auth.get_api_access_headers()
 
         # Get list of ids for the 50 of the newest album releases
         new_albums_ids = self.get_new_albums(headers)

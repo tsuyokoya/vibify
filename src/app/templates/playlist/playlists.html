@@ -13,13 +13,15 @@
       {{g.user["name"]}}'s Playlists
     </h2>
     <!-- Spotify Profile link -->
-    <div
-      class="flex flex-col w-1/5 m-2 border-2 border-white bg-deepPurple rounded-md hover:scale-110 hover:bg-white hover:border-lightGreen hover:text-lightGreen transition duration-1500"
-    >
-      <a href="{{playlists_url}}" target="_blank" class="p-3">
-        <h3 class="text-center text-xl">My Spotify Profile</h3>
-      </a>
-    </div>
+    {% if profile_url %}
+      <div
+        class="flex flex-col w-1/5 m-2 border-2 border-white bg-deepPurple rounded-md hover:scale-110 hover:bg-white hover:border-lightGreen hover:text-lightGreen transition duration-1500"
+      >
+        <a href="{{profile_url}}" target="_blank" class="p-3">
+          <h3 class="text-center text-xl">My Spotify Profile</h3>
+        </a>
+      </div>
+    {% endif %}
     <!-- List of Spotify playlists -->
     <div class="flex flex-wrap justify-evenly">
 
@@ -29,7 +31,7 @@
             class="flex flex-col w-96 m-7 border-2 border-white rounded-md hover:scale-110 hover:border-lightGreen hover:bg-black hover:text-lightGreen transition duration-1500"
           >
             <a href="{{playlist.url}}" target="_blank" class="p-3">
-              <h3 class="text-center text-xl">{{playlist.name}}</h3>
+              <h3 class="text-center text-3xl mb-2">{{playlist.name}}</h3>
               <img
                 src="{{playlist.image}}"
                 class="h-80 w-full"

@@ -41,7 +41,7 @@
           {% if session["curr_user"] %}
             <form
               id="add-playlist-form"
-              action="/playlist/{{session['title']}}"
+              action="{{url_for('playlist.add_playlist_to_spotify', title=title)}}"
               method="post"
             >
               <button

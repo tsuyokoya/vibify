@@ -16,8 +16,9 @@ from app.models import User
 
 CURR_USER_KEY = "curr_user"
 
-##############################################################################
+#
 # User login/logout
+#
 
 
 @bp.before_request
@@ -48,8 +49,9 @@ def logout_user():
     return redirect("/")
 
 
-##############################################################################
+#
 # User Spotify authorization
+#
 
 
 @bp.route("/authorize")

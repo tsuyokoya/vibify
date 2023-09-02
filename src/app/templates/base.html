@@ -104,7 +104,7 @@
             <!-- Playlist inputs and button -->
             <form
               class="flex flex-col justify-evenly text-3xl w-1/2"
-              action="{{url_for('main.show_home_page')}}"
+              action="{{url_for('playlist.create_custom_playlist')}}"
               method="POST"
               id="playlist-form"
             >
@@ -153,17 +153,17 @@
             <!-- Playlists -->
             <div class="flex justify-evenly">
               <a
-                href="{{url_for('playlist.show_generated_playlist', title='preset-sad')}}"
+                href="{{url_for('playlist.show_preset_playlist', title='preset-sad')}}"
                 class="preset border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
                 >Sad</a
               >
               <a
-                href="{{url_for('playlist.show_generated_playlist', title='preset-neutral')}}"
+                href="{{url_for('playlist.show_preset_playlist', title='preset-neutral')}}"
                 class="preset border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
                 >Neutral</a
               >
               <a
-                href="{{url_for('playlist.show_generated_playlist', title='preset-happy')}}"
+                href="{{url_for('playlist.show_preset_playlist', title='preset-happy')}}"
                 class="preset border-solid border-4 rounded-md p-10 w-1/4 text-2xl hover:scale-110 hover:bg-lightGreen transition duration-1500"
                 >Happy</a
               >
