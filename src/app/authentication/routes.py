@@ -7,8 +7,8 @@ from flask import (
     session,
 )
 
-from .spotify import spotify
 from .authentication import auth
+from ..spotify import spotify
 
 from app.authentication import bp
 from app.models import User

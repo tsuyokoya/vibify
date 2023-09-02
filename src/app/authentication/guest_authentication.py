@@ -12,8 +12,6 @@ grant_type = {"grant_type": "client_credentials"}
 
 
 class GuestAuth:
-    TOKEN_URL = token_url = "https://accounts.spotify.com/api/token"
-
     def __init__(self, client_id, client_secret, grant_type):
         self.client_id = client_id
         self.client_secret = client_secret
@@ -26,7 +24,7 @@ class GuestAuth:
         token_headers = self.get_token_headers()
 
         post_response = requests.post(
-            self.TOKEN_URL, headers=token_headers, data=self.grant_type
+            Config.TOKEN_URL, headers=token_headers, data=self.grant_type
         )
 
         if post_response.status_code == 200:

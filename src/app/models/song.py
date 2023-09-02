@@ -1,16 +1,6 @@
 from app.extensions import db
 
-# - songs
-#   - id: String, PK
-#   - name: String
-#   - valence: Decimal
-#   - uri: String
-#   - artist: String
-#   - album_name: String
-#   - album_image_url: String
 
-
-# Song model
 class Song(db.Model):
     """Creates song model"""
 

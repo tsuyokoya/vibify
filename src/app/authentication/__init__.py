@@ -5,4 +5,3 @@ bp = Blueprint("authentication", __name__)
 from app.authentication import routes
 
 from .guest_authentication import guest_auth
-from .spotify import spotify

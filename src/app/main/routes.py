@@ -1,7 +1,5 @@
-from datetime import datetime
-from flask import render_template, redirect, session, g
+from flask import render_template, session, g
 
-from app.authentication import guest_auth, spotify
 from app.main import bp
 from app.models import User
 

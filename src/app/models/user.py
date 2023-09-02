@@ -1,14 +1,8 @@
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
+from sqlalchemy.dialects.postgresql import UUID
+
 from app.extensions import db
-
-
-# - users
-#   - id: UUID, PK
-#   - spotify_id: String
-#   - name: String
-#   - email: String
 
 
 # User model

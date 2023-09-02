@@ -6,16 +6,16 @@ from urllib.parse import urlencode
 
 from app.extensions import db
 from app.models import Song
-from .authentication import auth
-from .guest_authentication import guest_auth
+from config import Config
+
+from .authentication.authentication import auth
+from .authentication.guest_authentication import guest_auth
 
 
 class SpotifyAPI:
-    ENDPOINT_BASE_URL = "https://api.spotify.com/v1"
-
     def get_user_spotify_data(self):
         """Returns data from user's Spotify account"""
-        lookup_url = self.ENDPOINT_BASE_URL + "/me"
+        lookup_url = Config.ENDPOINT_BASE_URL + "/me"
         headers = session["headers"]
 
         user_data = requests.get(lookup_url, headers=headers)
@@ -56,7 +56,7 @@ class SpotifyAPI:
         for group in ids:
             string_ids = ",".join(group)
             query = {"ids": string_ids}
-            endpoint = self.ENDPOINT_BASE_URL + f"/audio-features?{urlencode(query)}"
+            endpoint = Config.ENDPOINT_BASE_URL + f"/audio-features?{urlencode(query)}"
 
             features_data = requests.get(endpoint, headers=headers).json()
             features_list = [
@@ -83,7 +83,7 @@ class SpotifyAPI:
         tracks_data = []
         string_ids = ",".join(ids)
         query = {"ids": string_ids}
-        endpoint = self.ENDPOINT_BASE_URL + f"/tracks?{urlencode(query)}"
+        endpoint = Config.ENDPOINT_BASE_URL + f"/tracks?{urlencode(query)}"
 
         tracks_data_list = requests.get(endpoint, headers=headers).json()
 
@@ -130,7 +130,7 @@ class SpotifyAPI:
         """Get list of the 50 newest albums"""
         new_albums_ids = []
         query = {"limit": 50}
-        endpoint = self.ENDPOINT_BASE_URL + f"/browse/new-releases?{urlencode(query)}"
+        endpoint = Config.ENDPOINT_BASE_URL + f"/browse/new-releases?{urlencode(query)}"
 
         new_albums_data = requests.get(endpoint, headers=headers).json()
         new_albums_items = new_albums_data["albums"]["items"]
@@ -146,7 +146,7 @@ class SpotifyAPI:
         for group in albums_ids:
             string_ids = ",".join(group)
             query = {"ids": string_ids}
-            endpoint = self.ENDPOINT_BASE_URL + f"/albums?{urlencode(query)}"
+            endpoint = Config.ENDPOINT_BASE_URL + f"/albums?{urlencode(query)}"
 
             albums_data = requests.get(endpoint, headers=headers).json()
             albums_list = albums_data["albums"]
@@ -159,7 +159,7 @@ class SpotifyAPI:
 
     def create_empty_spotify_playlist(self, user_id):
         headers = auth.get_api_access_headers()
-        endpoint = self.ENDPOINT_BASE_URL + f"/users/{user_id}/playlists"
+        endpoint = Config.ENDPOINT_BASE_URL + f"/users/{user_id}/playlists"
         data = {"name": session["title"], "public": False}
 
         response = requests.post(endpoint, headers=headers, json=data).json()
@@ -170,7 +170,7 @@ class SpotifyAPI:
         string_uris = ",".join(uris)
         query = {"uris": string_uris}
         endpoint = (
-            self.ENDPOINT_BASE_URL
+            Config.ENDPOINT_BASE_URL
             + f"/playlists/{playlist_id}/tracks?{urlencode(query)}"
         )
 
@@ -180,7 +180,7 @@ class SpotifyAPI:
     def get_user_playlists(self, user_id):
         playlists = []
         headers = auth.get_api_access_headers()
-        endpoint = self.ENDPOINT_BASE_URL + f"/users/{user_id}/playlists"
+        endpoint = Config.ENDPOINT_BASE_URL + f"/users/{user_id}/playlists"
 
         response = requests.get(endpoint, headers=headers).json()
 
@@ -209,7 +209,7 @@ class SpotifyAPI:
 
     def unfollow_playlist(self, playlist_id):
         headers = auth.get_api_access_headers()
-        endpoint = self.ENDPOINT_BASE_URL + f"/playlists/{playlist_id}/followers"
+        endpoint = Config.ENDPOINT_BASE_URL + f"/playlists/{playlist_id}/followers"
 
         requests.delete(endpoint, headers=headers)
         return True

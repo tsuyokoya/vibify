@@ -11,11 +11,12 @@ from flask import (
 )
 from random import shuffle
 
-from app.authentication import guest_auth, spotify
+from app.authentication import guest_auth
 from app.models import Song
 from app.playlist import bp
 
 from ..forms import CreatePlaylistForm
+from ..spotify import spotify
 
 
 @bp.route("/", methods=["GET"])

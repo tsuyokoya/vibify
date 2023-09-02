@@ -4,10 +4,10 @@ import random
 import requests
 import string
 
-from urllib.parse import urlencode
+from config import Config
 from datetime import datetime, timedelta
 from flask import session
-from config import Config
+from urllib.parse import urlencode
 
 client_id = Config.CLIENT_ID
 client_secret = Config.CLIENT_SECRET
@@ -16,9 +16,6 @@ scope = Config.SCOPE
 
 
 class Authentication:
-    TOKEN_URL = token_url = "https://accounts.spotify.com/api/token"
-    AUTH_BASE_URL = "https://accounts.spotify.com/en/authorize?"
-
     def __init__(self, client_id, client_secret, redirect_uri, scope):
         self.client_id = client_id
         self.client_secret = client_secret
@@ -46,7 +43,7 @@ class Authentication:
             "scope": self.scope,
             "state": state_key,
         }
-        authorize_url = self.AUTH_BASE_URL + urlencode(query)
+        authorize_url = Config.AUTH_BASE_URL + urlencode(query)
         return authorize_url
 
     def authorize_user(self, code):
@@ -54,7 +51,7 @@ class Authentication:
         token_data = self.get_token_data(code)
 
         post_response = requests.post(
-            self.TOKEN_URL, headers=token_headers, data=token_data
+            Config.TOKEN_URL, headers=token_headers, data=token_data
         )
 
         if post_response.status_code == 200:
@@ -95,7 +92,9 @@ class Authentication:
             "refresh_token": session["refresh_token"],
         }
         headers = self.get_token_headers()
-        post_response = requests.post(self.TOKEN_URL, data=data, headers=headers).json()
+        post_response = requests.post(
+            Config.TOKEN_URL, data=data, headers=headers
+        ).json()
 
         access_token = post_response["access_token"]
         access_duration = post_response["expires_in"]
